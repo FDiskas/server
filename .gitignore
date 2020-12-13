@@ -1,0 +1,14 @@
+node_modules
+altv-server
+resources
+.vscode
+*.dll
+*.exe
+update.json
+modules/
+data/
+*.log
+cache/
+crashdumps/
+src-copy/hud/client/html
+src-copy/editor
