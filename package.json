@@ -1,17 +1,20 @@
 {
-    "name": "altv-quickstart-ts",
+    "name": "altv-server",
     "version": "2.1.0",
-    "description": "A Typescript Quickstart Repo for alt:V",
+    "description": "A Repo for alt:V server",
     "main": "",
     "scripts": {
         "watch": "tsc-watch --onSuccess \"node ./postbuild/copyFiles.mjs\"",
-        "build": "npm run clean && tsc && npm run copy",
+        "prebuild": "npm run clean",
+        "build": "tsc",
+        "postbuild": "npm run copy",
         "clean": "rimraf resources",
         "copy": "node ./postbuild/copyFiles.mjs",
-        "update": "altv-pkg d release"
+        "update": "altv-pkg d release",
+        "format": "prettier --loglevel warn --write \"**/*.{ts,md}\"",
+        "postinstall": "patch-package"
     },
-    "author": "stuyk",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "@altv/types-client": "^1.1.0",
         "@altv/types-natives": "^1.1.0",
@@ -20,13 +23,21 @@
         "@types/gulp": "^4.0.6",
         "@types/gulp-debug": "^2.0.31",
         "@types/node": "^14.6.1",
-        "altv-pkg": "latest",
+        "altv-pkg": "^1.0.3",
+        "fkill": "^7.0.1",
         "gulp": "^4.0.2",
         "gulp-using": "^0.1.1",
+        "patch-package": "^6.2.2",
+        "postinstall-postinstall": "^2.1.0",
+        "prettier": "^2.2.1",
         "rimraf": "^3.0.2",
+        "rollup": "^2.35.1",
         "tsc-watch": "^4.2.9",
         "typescript": "^4.0.2",
-        "fkill": "^7.0.1"
+        "typescript-bundle": "^1.0.17"
     },
-    "type": "module"
+    "type": "module",
+    "dependencies": {
+        "@durtyfree/altv-nativeui": "^1.4.4"
+    }
 }

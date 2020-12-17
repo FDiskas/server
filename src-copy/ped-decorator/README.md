@@ -1,0 +1,20 @@
+-   Only for Developing!
+-
+-   Put the files in resources/[Your Order Name]
+-
+-   Type in the server console: start [Your Order Name]
+-
+-   If the Resource is success loaded
+-   F12 - Open the Ped Decorator
+-   X - To un/lock the Camera and Movement
+-
+-   Attention:
+-   If you press the close Button in the Main Window, then all Objects get deleted!
+-   After pressing `Print Objects` the code for the Objects will send to your Client Console (F8 or client.log)
+-
+-   Object Lists
+-   Plebmasters -> https://plebmasters.de/?app=objects
+-   mWojtasik -> https://mwojtasik.dev/tools/gtav/objects
+-
+-   Bone Id List
+-   https://wiki.altv.mp/Ped:Bones

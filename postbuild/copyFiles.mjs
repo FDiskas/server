@@ -9,54 +9,52 @@ const __dirname = process.cwd();
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json')));
 
 const copyFilesTask = new Promise(async (resolve) => {
-  console.log(`[TS] Beginning File Copy`);
+    console.log(`[TS] Beginning File Copy`);
 
-  // cfg files
-  await new Promise((resolve) => {
-    const cfgSyntax = `./src/**/*.cfg`;
-    gulp.src([path.join(__dirname, cfgSyntax)]).pipe(using({}));
-    gulp
-      .src([path.join(__dirname, cfgSyntax)])
-      .pipe(gulp.dest(path.join(__dirname, '/resources')))
-      .on('end', resolve);
-  });
+    // cfg files
+    await new Promise((resolve) => {
+        const cfgSyntax = `./src/**/*.{cfg,json}`;
+        gulp.src([path.join(__dirname, cfgSyntax)]).pipe(using({}));
+        gulp.src([path.join(__dirname, cfgSyntax)])
+            .pipe(gulp.dest(path.join(__dirname, '/resources')))
+            .on('end', resolve);
+    });
 
-  // src-copy directory
-  await new Promise((resolve) => {
-    const directorySyntax = './src-copy/**/*';
-    gulp.src([path.join(__dirname, directorySyntax)]).pipe(using({}));
-    gulp
-      .src([path.join(__dirname, directorySyntax)])
-      .pipe(gulp.dest(path.join(__dirname, '/resources')))
-      .on('end', resolve);
-  });
+    // src-copy directory
+    await new Promise((resolve) => {
+        const directorySyntax = './src-copy/**/*';
+        gulp.src([path.join(__dirname, directorySyntax)]).pipe(using({}));
+        gulp.src([path.join(__dirname, directorySyntax)])
+            .pipe(gulp.dest(path.join(__dirname, '/resources')))
+            .on('end', resolve);
+    });
 
-  console.log(`[TS] Finished Copying Files`);
-  resolve();
+    console.log(`[TS] Finished Copying Files`);
+    resolve();
 });
 
 if (config.restartServerAfterCopy) {
-  copyFilesTask.then(async () => {
-    await fkill('altv-server.exe', { force: true }).catch((err) => {
-      return;
+    copyFilesTask.then(async () => {
+        await fkill('altv-server.exe', { force: true }).catch((err) => {
+            return;
+        });
+
+        await fkill('altv-server').catch((err) => {
+            return;
+        });
+
+        await fkill('start.sh').catch((err) => {
+            return;
+        });
+
+        if (fs.existsSync(path.join(__dirname, `altv-server.exe`))) {
+            console.log(`Started Windows Server for alt:V`);
+            spawn(`cmd`, ['/C', 'start /min altv-server.exe'], { detached: true, stdio: 'inherit' });
+        }
+
+        if (fs.existsSync(path.join(__dirname, 'start.sh'))) {
+            console.log(`Started Linux Server for alt:V`);
+            spawn(`/bin/sh`, ['start.sh'], { detached: true, stdio: 'inherit' });
+        }
     });
-
-    await fkill('altv-server').catch((err) => {
-      return;
-    });
-
-    await fkill('start.sh').catch((err) => {
-      return;
-    });
-
-    if (fs.existsSync(path.join(__dirname, `altv-server.exe`))) {
-      console.log(`Started Windows Server for alt:V`);
-      spawn(`cmd`, ['/C', 'start /min altv-server.exe'], { detached: true, stdio: 'inherit' });
-    }
-
-    if (fs.existsSync(path.join(__dirname, 'start.sh'))) {
-      console.log(`Started Linux Server for alt:V`);
-      spawn(`/bin/sh`, ['start.sh'], { detached: true, stdio: 'inherit' });
-    }
-  });
 }

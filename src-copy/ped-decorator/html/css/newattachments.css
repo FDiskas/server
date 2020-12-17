@@ -1,0 +1,363 @@
+@font-face {
+  font-family: "BNT";
+  src: url("../fonts/bnt.ttf") format("truetype");
+}
+
+body {
+  background: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  user-select: none;
+}
+
+.AttachmentBox {
+  position: absolute;
+  top: 2vh;
+  left: 1vw;
+  width: 40vw;
+  height: 20vh;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 5px rgba(0, 0, 0, 0.5);
+  border-top-left-radius: 1vw;
+  border-top-right-radius: 1vw;
+  border-bottom-right-radius: 1vw;
+  overflow: hidden;
+}
+.TitleBox {
+  position: absolute;
+  overflow: hidden;
+  top: 0vh;
+  left: 0vw;
+  width: -webkit-fill-available;
+  height: 4vh;
+  background: rgba(0, 126, 255, 0.75);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.5);
+}
+span.Title {
+  position: absolute;
+  text-align: center;
+  width: -webkit-fill-available;
+  left: 0vw;
+  top: 0.4vh;
+  font-size: 1.7vw;
+  font-family: bnt;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+.TitleCloseButton {
+  position: absolute;
+  top: 0vh;
+  right: 1vw;
+  font-family: bnt;
+  font-size: 2vw;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: 0.5s;
+}
+.TitleCloseButton:hover {
+  color: red;
+  opacity: 1;
+}
+
+.AttachmentInnerBox {
+  position: absolute;
+  top: 4vh;
+  left: 0vw;
+  width: -webkit-fill-available;
+  height: 16vh;
+}
+
+.BoxButton {
+  position: relative;
+  top: 2vh;
+  left: 8vw;
+  float: left;
+  margin-left: 1.5vw;
+  margin-right: 1.5vw;
+  font-family: bnt;
+  font-size: 1.5vw;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  padding: 0.5vw;
+  border-top-left-radius: 0.5vw;
+  border-bottom-right-radius: 0.5vw;
+  border-top: solid rgba(0, 126, 255, 0.75) 2px;
+  border-bottom: solid rgba(0, 126, 255, 0.75) 2px;
+  transition: 0.2s;
+  text-align: center;
+  width: 8vw;
+  cursor: pointer;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+.BoxButton:hover {
+  transform: scale(1.15);
+  border-top: solid rgba(0, 161, 255, 0.75) 4px;
+  border-bottom: solid rgba(0, 161, 255, 0.75) 4px;
+}
+
+.PrintObjects {
+  position: absolute;
+  bottom: 1vh;
+  left: 8vw;
+  float: left;
+  margin-left: 1.5vw;
+  margin-right: 1.5vw;
+  font-family: bnt;
+  font-size: 1.9vw;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  padding: 0.5vw;
+  border-top-left-radius: 0.5vw;
+  border-bottom-right-radius: 0.5vw;
+  border-top: solid rgba(0, 126, 255, 0.75) 2px;
+  border-bottom: solid rgba(0, 126, 255, 0.75) 2px;
+  transition: 0.2s;
+  text-align: center;
+  width: 20vw;
+  height: 3vh;
+  cursor: pointer;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+.PrintObjects:hover {
+  transform: scale(1.15);
+  border-top: solid rgba(0, 161, 255, 0.75) 4px;
+  border-bottom: solid rgba(0, 161, 255, 0.75) 4px;
+}
+
+.DisableButton {
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+.DisableButton:hover {
+  transform: scale(1);
+  color: rgba(0, 126, 255, 0.75);
+}
+
+.AttachmentEditObjectBox {
+  position: absolute;
+  top: 22vh;
+  left: 21vw;
+  width: 20vw;
+  height: 50vh;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 5px rgba(0, 0, 0, 0.5);
+  border-bottom-right-radius: 1vw;
+  overflow: hidden;
+}
+
+.AttachmentChooseBox {
+  position: absolute;
+  top: 22vh;
+  left: 1vw;
+  width: 20vw;
+  height: 50vh;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 5px rgba(0, 0, 0, 0.5);
+  border-bottom-left-radius: 1vw;
+  border-bottom-right-radius: 1vw;
+  overflow: hidden;
+}
+
+.AttachmentInnerBoxSecond {
+  position: absolute;
+  top: 4vh;
+  left: 0vw;
+  width: -webkit-fill-available;
+  height: 46vh;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.ChooseObjectItem {
+  position: relative;
+  top: 2vh;
+  left: 0vw;
+  float: left;
+  margin-left: 0.5vw;
+  margin-right: 0.5vw;
+  margin-bottom: 1vw;
+  font-family: bnt;
+  font-size: 1.5vw;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  padding: 0.5vw;
+  border-top-left-radius: 0.5vw;
+  border-bottom-right-radius: 0.5vw;
+  border-top: solid rgba(0, 126, 255, 0.75) 2px;
+  border-bottom: solid rgba(0, 126, 255, 0.75) 2px;
+  transition: 0.2s;
+  text-align: center;
+  width: 18vw;
+  cursor: pointer;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+
+.AttachmentEditItem {
+  position: relative;
+  top: 2vh;
+  left: 1vw;
+  width: 17.5vw;
+  height: 5vh;
+  margin-bottom: 1vh;
+  padding: 0.5vh;
+}
+
+.editItemInput {
+  position: absolute;
+  top: 1vh;
+  left: 0.5vw;
+  width: 11.5vw;
+  height: 4vh;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  border-top-left-radius: 0.5vw;
+  border-bottom-right-radius: 0.5vw;
+  border-bottom: 0.1vw solid #409eff;
+  border-top: 0.1vw solid #409eff;
+  outline: none;
+  font-family: bnt;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  font-size: 1.5vw;
+}
+
+i#editItemButton {
+  position: relative;
+  right: 0.6vw;
+  top: 0.6vh;
+  font-size: 2vw;
+  color: #409eff;
+  text-shadow: 1px 1px 2px black;
+  transition: 0.2s;
+  float: right;
+  margin-left: 0.3vw;
+}
+
+i#editItemButton:hover {
+  transform: scale(1.1);
+  color: rgb(16, 219, 16);
+}
+
+input.editItemSlider {
+  position: absolute;
+  width: 17vw;
+  height: 1vh;
+  top: 4vh;
+  left: 0.4vw;
+  outline: none;
+  -webkit-appearance: none;
+  background: #efefef;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+  border-radius: 20px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+input.editItemSlider:hover {
+  opacity: 1;
+}
+input.editItemSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #006ce7;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.AttachmentEditTitle {
+  position: absolute;
+  text-align: center;
+  width: -webkit-fill-available;
+  left: 0vw;
+  top: 0.4vh;
+  font-size: 1.7vw;
+  font-family: bnt;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+.AttachmentEditSliderNumber {
+  position: absolute;
+  text-align: right;
+  width: -webkit-fill-available;
+  right: 1vw;
+  top: 1.8vh;
+  font-size: 1vw;
+  font-family: bnt;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 126, 255, 0.75);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 79, 158, 0.75);
+}
+
+.AttachmentBoneBox {
+  position: absolute;
+  top: 22vh;
+  right: 1vw;
+  width: 20vw;
+  height: 50vh;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 1vw;
+  overflow: hidden;
+}
+
+.SelectedItem {
+  border-top: solid rgba(255, 0, 0, 0.75) 3px;
+  border-bottom: solid rgba(255, 0, 0, 0.75) 3px;
+}
+
+.AttachmentAnimationBox {
+  position: absolute;
+  bottom: 2vh;
+  left: 1vw;
+  width: 40vw;
+  height: 11vh;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 1vw;
+  overflow: hidden;
+}
+
+input.AnimationInput {
+  position: relative;
+  margin-right: 1vw;
+  top: 1.3vh;
+  left: 0.5vw;
+  width: 16.5vw;
+  height: 4vh;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  border-top-left-radius: 0.5vw;
+  border-bottom-right-radius: 0.5vw;
+  border-bottom: 0.1vw solid #409eff;
+  border-top: 0.1vw solid #409eff;
+  outline: none;
+  font-family: auto;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  font-size: 1.1vw;
+}
