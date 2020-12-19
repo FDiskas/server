@@ -30,11 +30,7 @@ export class Blip {
             this.handle = game.addBlipForEntity(attachedTo.scriptID);
             this.attachedTo = attachedTo;
         } else {
-            this.handle = game.addBlipForCoord(
-                position.x,
-                position.y,
-                position.z
-            );
+            this.handle = game.addBlipForCoord(position.x, position.y, position.z);
             this.position = position;
         }
         this.name = name;

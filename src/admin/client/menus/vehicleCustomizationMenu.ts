@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 import { Vehicle } from '../utils/vehicle';
 import { Menu } from '../utils/menu';
 import { VehicleMod } from '../enums/vehicleMod';

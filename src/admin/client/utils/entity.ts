@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 
 export class Entity {
     static setInvincible(entity: alt.Entity, toggle: boolean) {

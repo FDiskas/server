@@ -1,6 +1,6 @@
 import * as alt from 'alt-client';
 
-import * as native from 'natives';
+import native from 'natives';
 
 let pos = alt.Player.local.pos;
 let gameObject = native.createObject(

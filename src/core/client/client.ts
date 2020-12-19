@@ -1,5 +1,6 @@
 import * as alt from 'alt-client';
-import * as native from 'natives';
+import native from 'natives';
+import './nametags';
 
 const playFieldCoord = { x: -1212.79, y: -1673.52, z: 7 };
 const airportCoord = { x: -1466.79, y: -2507.52, z: 0 };
@@ -12,16 +13,110 @@ alt.on('keyup', (key) => {
     }
 });
 
-alt.on('consoleCommand', async (cmd, ...args) => {
-    if (cmd != 'test') return;
-    alt.log('command: ' + cmd);
+/////// Just some variables ///////////////////
+var hotkey = 88; //Change key - https://keycode.info/
+var handsUp = false;
+var status = false;
+// const localPlayer = alt.Player.local;
+var dict = 'missminuteman_1ig_2';
+native.requestAnimDict(dict);
+///////////////////////////////////////////////
 
-    alt.everyTick(Test);
+alt.setInterval(() => {
+    if (handsUp == true) {
+        if (status == false) {
+            native.taskPlayAnim(
+                alt.Player.local.scriptID,
+                dict,
+                'handsup_enter',
+                8.0,
+                8.0,
+                -1,
+                50,
+                0,
+                false,
+                false,
+                false
+            );
+            status = true;
+        }
+    } else {
+        if (status == true) {
+            native.clearPedTasks(alt.Player.local.scriptID);
+            status = false;
+        }
+    }
+}, 10);
+
+// Hands be in air until 'x' gets released ////
+var hotkey = 79; //Change key - https://keycode.info/
+var handsUp = false;
+var status = false;
+var dict = 'missminuteman_1ig_2';
+native.requestAnimDict(dict);
+
+alt.on('keydown', (key) => {
+    // X Key pressed
+    if (key === hotkey) {
+        handsUp = true;
+        if (handsUp && native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
+            alt.everyTick(() => {
+                native.disableControlAction(2, 59, true);
+            });
+        }
+    }
 });
 
-function Test(): void {
-    alt.log('EveryTick: Test');
-}
+alt.on('keyup', (key) => {
+    if (key === hotkey) {
+        handsUp = false;
+        if (!handsUp && native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
+            alt.everyTick(() => {
+                native.enableControlAction(2, 59, true);
+            });
+        }
+    }
+});
+///////////////////////////////////////////////
+
+alt.on('consoleCommand', async (cmd, ...args) => {
+    if (cmd != 'anim') return;
+
+    alt.log('play animation');
+    const dic = 'gestures@f@standing@casual';
+    const anim = 'handsup_enter';
+    native.requestAnimDict(dic);
+    await WaitUntil(native.hasAnimDictLoaded, dic);
+
+    native.taskPlayAnim(alt.Player.local.scriptID, dic, anim, 8.0, 8.0, 5000, 50, 0, false, false, false);
+    // native.taskPlayAnim(alt.Player.local.scriptID, dic, anim, 8.0, 8.0, -1, 50, 0, false, false, false);
+});
+
+let crouched = false;
+alt.on('keydown', (key) => {
+    if (key == 17) {
+        //ctrl
+        native.disableControlAction(0, 36, true);
+        if (
+            !native.isPlayerDead(alt.Player.local.scriptID) &&
+            !native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)
+        ) {
+            if (!native.isPauseMenuActive()) {
+                native.requestAnimSet('move_ped_crouched');
+                if (crouched) {
+                    native.clearPedTasks(alt.Player.local.scriptID);
+                    alt.setTimeout(() => {
+                        native.resetPedMovementClipset(alt.Player.local.scriptID, 0.45);
+                        crouched = false;
+                    }, 200);
+                } else {
+                    native.setPedMovementClipset(alt.Player.local.scriptID, 'move_ped_crouched', 0.45);
+                    crouched = true;
+                }
+            }
+        }
+    }
+});
 
 alt.onServer('Player:ready', async (veh) => {
     alt.log(`Hello from alt:V Client`);
@@ -77,8 +172,9 @@ const stopIntro = async () => {
     native.doScreenFadeIn(1000);
 
     native.newLoadSceneStop();
-
     native.setWeatherTypeNowPersist('XMAS');
+
+    native.playAmbientSpeech1(alt.Player.local.scriptID, 'GREET_ACROSS_STREET', 'SPEECH_PARAMS_STANDARD', 0);
 };
 
 export const WaitUntil = (cb: (...args) => boolean, ...args) => {

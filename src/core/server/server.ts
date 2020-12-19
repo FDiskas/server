@@ -1,6 +1,6 @@
 import * as alt from 'alt-server';
 
-// import * as native from 'natives';
+// import native from 'natives';
 
 alt.log(`Server with example resource started.`);
 

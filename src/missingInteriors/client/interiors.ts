@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as natives from 'natives';
+import natives from 'natives';
 
 alt.requestIpl('ex_dt1_02_office_02b');
 alt.requestIpl('chop_props');

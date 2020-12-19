@@ -1,23 +1,12 @@
 import * as alt from 'alt-server';
 
 class Callbacks {
-    private callbacks: Record<
-        string,
-        (player: alt.Player, args: any[]) => any
-    > = {};
+    private callbacks: Record<string, (player: alt.Player, args: any[]) => any> = {};
 
     init() {
-        alt.onClient(
-            'network:requestCallback',
-            (player: alt.Player, id: number, key: string, args: any[]) => {
-                alt.emitClient(
-                    player,
-                    'network:sendCallback',
-                    id,
-                    this.callbacks[key](player, args)
-                );
-            }
-        );
+        alt.onClient('network:requestCallback', (player: alt.Player, id: number, key: string, args: any[]) => {
+            alt.emitClient(player, 'network:sendCallback', id, this.callbacks[key](player, args));
+        });
         this.callbacks['vehicle:create'] = (player, args) => {
             try {
                 let vehicle = new alt.Vehicle(
@@ -121,9 +110,7 @@ class Callbacks {
             return [target.hwidHash, target.hwidExHash, target.socialId];
         };
         this.callbacks['game:setTime'] = (_, args) => {
-            alt.Player.all.forEach((player) =>
-                player.setDateTime(0, 0, 0, args[0], args[1], args[2])
-            );
+            alt.Player.all.forEach((player) => player.setDateTime(0, 0, 0, args[0], args[1], args[2]));
         };
         this.callbacks['game:setWeather'] = (_, args) => {
             alt.Player.all.forEach((player) => player.setWeather(args[0]));

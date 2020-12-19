@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 import { Player } from '../utils/player';
 import { AmmoType } from '../enums/ammoType';
 import { WeaponHash } from '../enums/weaponHash';

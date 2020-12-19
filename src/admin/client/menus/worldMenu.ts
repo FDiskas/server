@@ -1,4 +1,4 @@
-import * as game from 'natives';
+import game from 'natives';
 import { Menu } from '../utils/menu';
 import { CloudHat } from '../enums/cloudHat';
 import { TimeCycleModifier } from '../enums/timeCycleModifier';

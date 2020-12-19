@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 import { Weather } from '../enums/weather';
 import { network } from '../mod/network';
 import { tick } from '../mod/tick';
@@ -44,16 +44,7 @@ export class Game {
     }
 
     static async getUserInput(length = 30) {
-        game.displayOnscreenKeyboard(
-            6,
-            'FMMC_KEY_TIP8',
-            '',
-            '',
-            '',
-            '',
-            '',
-            length
-        );
+        game.displayOnscreenKeyboard(6, 'FMMC_KEY_TIP8', '', '', '', '', '', length);
         return (await new Promise((resolve) => {
             tick.register(
                 'player:awaitInput',
@@ -68,53 +59,24 @@ export class Game {
         })) as string;
     }
 
-    static async createProp(
-        model: number,
-        position: alt.Vector3,
-        dynamic: boolean
-    ) {
+    static async createProp(model: number, position: alt.Vector3, dynamic: boolean) {
         if (!game.hasModelLoaded(model)) await this.requestModel(model);
-        game.createObject(
-            model,
-            position.x,
-            position.y,
-            position.z,
-            true,
-            true,
-            dynamic
-        );
+        game.createObject(model, position.x, position.y, position.z, true, true, dynamic);
     }
 
     static isModelValid(hash: number) {
-        return game.isModelInCdimage(hash) ||
-            game.isModelValid(hash) ||
-            game.isWeaponValid(hash)
-            ? true
-            : false;
+        return game.isModelInCdimage(hash) || game.isModelValid(hash) || game.isWeaponValid(hash) ? true : false;
     }
 
     static getDistanceBetweenCoords(from: alt.Vector3, to: alt.Vector3) {
-        return game.getDistanceBetweenCoords(
-            from.x,
-            from.y,
-            from.z,
-            to.x,
-            to.y,
-            to.z,
-            true
-        );
+        return game.getDistanceBetweenCoords(from.x, from.y, from.z, to.x, to.y, to.z, true);
     }
 
     static async getPlayerIdentifiers(player: alt.Player) {
-        return (await network.callback('game:getPlayerIdentifiers', [
-            player,
-        ])) as string[];
+        return (await network.callback('game:getPlayerIdentifiers', [player])) as string[];
     }
 
-    static async teleportPlayertoEntity(
-        player: alt.Player,
-        entity: alt.Entity
-    ) {
+    static async teleportPlayertoEntity(player: alt.Player, entity: alt.Entity) {
         await network.callback('game:teleportPlayerToEntity', [player, entity]);
     }
 

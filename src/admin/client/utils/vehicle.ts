@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 import { VehicleColor } from '../enums/vehicleColor';
 import { VehicleHash } from '../enums/vehicleHash';
 import { VehicleMod } from '../enums/vehicleMod';
@@ -17,11 +17,7 @@ export class Vehicle extends Entity {
         return [colors[1], colors[2], extra[1], extra[2]];
     }
 
-    static async setColor(
-        vehicle: alt.Vehicle,
-        type: number,
-        color: VehicleColor
-    ) {
+    static async setColor(vehicle: alt.Vehicle, type: number, color: VehicleColor) {
         await network.callback('vehicle:setColor', [vehicle, type, color]);
     }
 
@@ -29,18 +25,8 @@ export class Vehicle extends Entity {
         await network.callback('vehicle:setMod', [vehicle, mod, index]);
     }
 
-    static async setWheels(
-        vehicle: alt.Vehicle,
-        wheelType: VehicleWheelType,
-        index: number,
-        isBike: boolean
-    ) {
-        await network.callback('vehicle:setWheels', [
-            vehicle,
-            wheelType,
-            index + 1,
-            isBike,
-        ]);
+    static async setWheels(vehicle: alt.Vehicle, wheelType: VehicleWheelType, index: number, isBike: boolean) {
+        await network.callback('vehicle:setWheels', [vehicle, wheelType, index + 1, isBike]);
     }
 
     static async repair(vehicle: alt.Vehicle) {
@@ -55,20 +41,13 @@ export class Vehicle extends Entity {
     static async create(hash: VehicleHash) {
         if (!Game.isCreatingVehicle) {
             Game.isCreatingVehicle = true;
-            if (alt.Player.local.vehicle)
-                await this.delete(alt.Player.local.vehicle);
-            let vehicle = (await network.callback('vehicle:create', [
-                hash,
-            ])) as alt.Vehicle;
+            if (alt.Player.local.vehicle) await this.delete(alt.Player.local.vehicle);
+            let vehicle = (await network.callback('vehicle:create', [hash])) as alt.Vehicle;
             tick.register(
                 'vehicle:setPedInto',
                 () => {
                     if (vehicle?.scriptID) {
-                        game.setPedIntoVehicle(
-                            alt.Player.local.scriptID,
-                            vehicle.scriptID,
-                            VehicleSeat.Driver
-                        );
+                        game.setPedIntoVehicle(alt.Player.local.scriptID, vehicle.scriptID, VehicleSeat.Driver);
                         tick.clear('vehicle:setPedInto');
                         Game.isCreatingVehicle = false;
                     }

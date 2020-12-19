@@ -1,9 +1,10 @@
-// @ts-check
 import multi from 'rollup-plugin-multi-input';
-import typescript from 'rollup-plugin-typescript2';
+import commonjs from '@rollup/plugin-commonjs';
+
+import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import { readFileSync } from 'fs';
-import resolve from 'rollup-plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy-glob';
 
 function looseJsonParse(obj) {
@@ -21,7 +22,7 @@ const clientHtmlResources = serverConfig.resources.map((item) => ({
     dest: `resources/${item}/client/html`,
 }));
 const resourceSettings = serverConfig.resources.map((item) => ({
-    files: `src/${item}/resource.cfg`,
+    files: `src/${item}/**/*.{cfg,json}`,
     dest: `resources/${item}/`,
 }));
 const resourceFromSrcCopy = serverConfig.resources.map((item) => ({
@@ -31,15 +32,18 @@ const resourceFromSrcCopy = serverConfig.resources.map((item) => ({
 
 export default {
     input: [...serverConfigResources, ...clientConfigResources],
+    preserveModules: false,
     output: {
         dir: 'resources',
+        format: 'es',
     },
     treeshake: true,
     external: ['alt-client', 'alt-server', 'natives'],
     plugins: [
         multi(),
-        resolve(),
-        typescript({ abortOnError: true }),
+        nodeResolve(),
+        commonjs(),
+        typescript(),
         terser(),
         copy([...clientHtmlResources, ...resourceSettings, ...resourceFromSrcCopy], {
             verbose: true,

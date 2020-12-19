@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 import { Font } from '../enums/font';
 import { Player } from '../utils/player';
 import { Text2D } from '../common/text2D';
@@ -12,7 +12,6 @@ import { Game } from '../utils/game';
 import { AbstractMenu } from './abstractMenu';
 import { AbstractSubMenu } from './abstractSubMenu';
 import { UIMenuItem, UIMenuCheckboxItem, BadgeStyle } from '@durtyfree/altv-nativeui';
-
 
 export class MiscMenu extends AbstractSubMenu {
     customPropItem: UIMenuItem;

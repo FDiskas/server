@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import * as game from 'natives';
+import game from 'natives';
 import { Font } from '../enums/font';
 import { Game } from '../utils/game';
 import { AbstractText } from './abstractText';
@@ -24,33 +24,17 @@ export class Text3D extends AbstractText {
     drawThisFrame() {
         if (this.attachedTo) this.position = this.attachedTo.pos;
         let scale =
-            (1 /
-                Game.getDistanceBetweenCoords(
-                    game.getGameplayCamCoord() as alt.Vector3,
-                    this.position
-                )) *
+            (1 / Game.getDistanceBetweenCoords(game.getGameplayCamCoord() as alt.Vector3, this.position)) *
             20 *
             ((1 / game.getGameplayCamFov()) * 100);
         game.setTextCentre(true);
         game.setTextScale(0, this.scale * scale);
-        game.setTextColour(
-            this.color.r,
-            this.color.g,
-            this.color.b,
-            this.color.a
-        );
+        game.setTextColour(this.color.r, this.color.g, this.color.b, this.color.a);
         game.setTextFont(this.font);
         game.setTextOutline();
-        game.setDrawOrigin(
-            this.position.x,
-            this.position.y,
-            this.position.z,
-            0
-        );
+        game.setDrawOrigin(this.position.x, this.position.y, this.position.z, 0);
         game.beginTextCommandDisplayText('CELL_EMAIL_BCON');
-        this.text
-            .match(/.{1,99}/g)
-            .forEach((text) => game.addTextComponentSubstringPlayerName(text));
+        this.text.match(/.{1,99}/g).forEach((text) => game.addTextComponentSubstringPlayerName(text));
         game.endTextCommandDisplayText(0, 0, 0);
         game.clearDrawOrigin();
     }
