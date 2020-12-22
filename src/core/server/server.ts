@@ -1,6 +1,7 @@
 import * as alt from 'alt-server';
 
 import { Action } from '../client/enums/actions';
+import { PedHash } from '../client/enums/pedHash';
 import { VehicleColor } from '../client/enums/vehicleColor';
 import { VehicleHash } from '../client/enums/vehicleHash';
 
@@ -18,7 +19,7 @@ export interface RPPlayer extends alt.Player {
 
 alt.on('playerConnect', (player: RPPlayer) => {
     // TODO: character creation
-    player.model = `mp_m_freemode_01`;
+    player.model = PedHash.mp_m_freemode_01;
     player.setWeather(alt.WeatherType.ExtraSunny);
     player.setDateTime(12, 10, 2020, 12, 12, 12);
 
@@ -41,6 +42,7 @@ alt.on('playerConnect', (player: RPPlayer) => {
     }, 5000);
 
     alt.on('resourceStop', () => {
+        alt.log('Resource server stopped');
         try {
             vehicle.destroy();
         } catch (error) {

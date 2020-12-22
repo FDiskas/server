@@ -1,5 +1,5 @@
 // https://wiki.rage.mp/index.php?title=Peds
-export enum PedHash {
+export const enum PedHash {
     a_c_boar = 0xce5ff074,
     a_c_cat_01 = 0x573201b8,
     a_c_chickenhawk = 0xaab71f62,

@@ -5,13 +5,14 @@ import { WeaponHash } from '../enums/weaponHash';
 import { DrivingStyle } from '../enums/drivingStyle';
 import { Action } from '../enums/actions';
 import { loadModelAsync } from '../lib/async';
+import { PedHash } from '../enums/pedHash';
 
 alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
     const driverStart = {
         x: -1016.289,
         y: -2759.372,
         z: 14.165,
-        model: 's_m_y_airworker',
+        model: PedHash.s_m_y_airworker,
         heading: 45.0,
     };
 
@@ -29,13 +30,12 @@ alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
 
     // Create Bus driver
     let pedDriver = null;
-    let timerToBusStation = null;
-    let timerToGarage = null;
+    let timerToGarage;
 
     loadModelAsync(driverStart.model).then(() => {
         pedDriver = native.createPed(
             1,
-            native.getHashKey(driverStart.model),
+            driverStart.model,
             driverStart.x,
             driverStart.y,
             driverStart.z,
@@ -45,7 +45,6 @@ alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
         );
         alt.on('resourceStop', () => {
             native.deletePed(pedDriver);
-            native.deleteVehicle(alt.Player.local.getMeta('welcomeBus'));
         });
 
         native.giveWeaponToPed(pedDriver, WeaponHash.Pistol, 100, false, true);
@@ -64,9 +63,10 @@ alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
 
     alt.on('enteredVehicle', (vehicle, seat) => {
         if (seat !== 1) {
-            alt.clearTimeout(timerToBusStation);
-            alt.clearTimeout(timerToGarage);
-            timerToBusStation = native.taskVehicleDriveToCoordLongrange(
+            if (timerToGarage) {
+                alt.clearTimeout(timerToGarage);
+            }
+            native.taskVehicleDriveToCoordLongrange(
                 pedDriver,
                 vehicle.scriptID,
                 driverDest.x,
@@ -81,7 +81,9 @@ alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
 
     alt.on('leftVehicle', (vehicle: alt.Vehicle, seat: number) => {
         if (seat !== 1) {
-            alt.emit(Action.TakeBusToGarage, pedDriver, vehicle);
+            if (native.isPedInVehicle(pedDriver, vehicle.scriptID, true)) {
+                alt.emit(Action.TakeBusToGarage, pedDriver, vehicle);
+            }
         }
     });
 
@@ -105,4 +107,10 @@ alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
             }, 45000);
         }, 15000);
     });
+
+    // const busDriverTag = alt.everyTick(() => {
+    //     distance(pedDriver.pos, alt.Player.local.pos) < 50) {
+
+    //     }
+    // });
 });
