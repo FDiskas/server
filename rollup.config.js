@@ -44,7 +44,7 @@ export default {
         nodeResolve(),
         commonjs(),
         typescript(),
-        terser(),
+        // terser(),
         copy([...clientHtmlResources, ...resourceSettings, ...resourceFromSrcCopy], {
             verbose: true,
             watch: false,

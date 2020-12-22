@@ -1,33 +1,61 @@
 import * as alt from 'alt-server';
 
-// import native from 'natives';
-
-alt.log(`Server with example resource started.`);
+import { Action } from '../client/enums/actions';
+import { VehicleColor } from '../client/enums/vehicleColor';
+import { VehicleHash } from '../client/enums/vehicleHash';
 
 const spawn = {
-    x: -1291.7142333984375,
-    y: 83.43296813964844,
-    z: 54.8916015625,
+    x: -1045.25,
+    y: -2750.778,
+    z: 21.363,
 };
+
+const busPos = { x: -1033.796142578125, y: -2730.409423828125, z: 20.085569381713867 };
 
 export interface RPPlayer extends alt.Player {
     lastVehicle: alt.Vehicle;
 }
 
 alt.on('playerConnect', (player: RPPlayer) => {
+    // TODO: character creation
     player.model = `mp_m_freemode_01`;
+    player.setWeather(alt.WeatherType.ExtraSunny);
+    player.setDateTime(12, 10, 2020, 12, 12, 12);
+
+    // Spawn Bus position
+    const vehicle = new alt.Vehicle(VehicleHash.Bus, busPos.x, busPos.y, busPos.z, busPos.x, busPos.y, busPos.z);
+
+    // vehicle.modKit = 1;
+    vehicle.dirtLevel = 0;
+    vehicle.engineOn = false;
+    vehicle.numberPlateText = 'welcome';
+    vehicle.activeRadioStation = alt.RadioStation.LosSantosRockRadio;
+    vehicle.primaryColor = VehicleColor.MetallicRed;
+
     player.spawn(spawn.x, spawn.y, spawn.z, 0);
 
-    alt.setTimeout(() => {
-        player.setWeather(alt.WeatherType.Xmas);
-        player.setDateTime(12, 10, 2020, 12, 12, 12);
-        player.lastVehicle = new alt.Vehicle('bus', player.pos.x, player.pos.y, player.pos.z, 0, 0, 0);
+    alt.emitClient(player, Action.PlayerReady);
 
-        alt.emitClient(player, 'Player:ready', player.lastVehicle);
-    }, 3000);
+    alt.setTimeout(() => {
+        alt.emitClient(player, Action.TakeBusFromAirport, vehicle);
+    }, 5000);
+
+    alt.on('resourceStop', () => {
+        try {
+            vehicle.destroy();
+        } catch (error) {
+            alt.log('Cant destroy bus');
+            alt.logError(error);
+        }
+    });
 });
 
 alt.on('playerDisconnect', (player) => {
-    // player.destroy();
-    // player.vehicle.destroy();
+    if (player.vehicle) {
+        player.vehicle.destroy();
+    }
+});
+
+alt.onClient(Action.TakeBusToGarage, (player: alt.Player, bus: alt.Vehicle) => {
+    bus.destroy();
 });

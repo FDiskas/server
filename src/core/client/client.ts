@@ -1,194 +1,289 @@
 import * as alt from 'alt-client';
 import native from 'natives';
+import { distance, getClosestVehicle } from './lib/distance';
 import './nametags';
+import './handling/hansUp';
+import './handling/crouch';
+import './animations/drunk';
+// import './intro/newjoiners';
+// import './object/placement';
+import './weather/weather';
+import './AI/takeFromAirport';
 
-const playFieldCoord = { x: -1212.79, y: -1673.52, z: 7 };
-const airportCoord = { x: -1466.79, y: -2507.52, z: 0 };
+import { Key } from './enums/keys';
+import { loadModelAsync } from './lib/async';
+import { Action } from './enums/actions';
 
-alt.on('keyup', (key) => {
-    if (key == 'I'.charCodeAt(0)) {
-        if (native.isCutsceneActive()) {
-            stopIntro();
-        }
+alt.on('keyup', async (key) => {
+    if (key == 'B'.charCodeAt(0)) {
+        const closest = native.getClosestVehicle(
+            alt.Player.local.pos.x,
+            alt.Player.local.pos.y,
+            alt.Player.local.pos.z,
+            50,
+            0,
+            70
+        );
+        native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 2, 1.0, 2, 0);
     }
 });
+alt.on('keyup', async (key) => {
+    if (key == 'G'.charCodeAt(0)) {
+        // native.setPedConfigFlag(alt.Player.local.scriptID, 429, true); // disable start engine
+        // native.setPedConfigFlag(alt.Player.local.scriptID, 241, true); // disable stop engine
+        // native.setPedConfigFlag(alt.Player.local.scriptID, 184, true); // disable auto shuffle
 
-/////// Just some variables ///////////////////
-var hotkey = 88; //Change key - https://keycode.info/
-var handsUp = false;
-var status = false;
-// const localPlayer = alt.Player.local;
-var dict = 'missminuteman_1ig_2';
-native.requestAnimDict(dict);
-///////////////////////////////////////////////
+        const closest = getClosestVehicle(alt.Player.local);
 
-alt.setInterval(() => {
-    if (handsUp == true) {
-        if (status == false) {
-            native.taskPlayAnim(
-                alt.Player.local.scriptID,
-                dict,
-                'handsup_enter',
-                8.0,
-                8.0,
-                -1,
-                50,
-                0,
-                false,
+        let sitting = false;
+        const minDist = 5;
+
+        // const doorsList = ['door_dside_f', 'door_pside_f', 'door_pside_r', 'door_dside_r'];
+        const seatsList = ['seat_pside_f', 'seat_pside_r', 'seat_dside_r'];
+        const plyPos = alt.Player.local.pos;
+        let closestDoor = 2;
+        let closestDist = 1000;
+        // const allSeats = native.getVehicleModelNumberOfSeats(closest);
+        for (let i = 0; i < seatsList.length; i++) {
+            const curr = seatsList[i];
+            const doorBone = native.getEntityBoneIndexByName(closest.vehicle.scriptID, curr);
+            const doorPos = native.getWorldPositionOfEntityBone(closest.vehicle.scriptID, doorBone);
+            const doorDist = distance({ x: doorPos.x, y: doorPos.y, z: doorPos.z }, plyPos);
+
+            if (!closestDoor || closestDist > doorDist) {
+                closestDoor = i;
+                closestDist = doorDist;
+                // Don't keep looping if you litterally touch the door since no other door will be closer
+                if (doorDist <= 0.1)
+                    // don't know if .1 will be enough
+                    break;
+            }
+        }
+
+        // const boneFRDoor = native.getEntityBoneIndexByName(closest, 'door_dside_r'); //Front Left
+        // const boneFLDoor = native.getEntictyBoneIndexByName(closest, 'door_dside_f'); //Front Right
+        // const boneBRDoor = native.getEntityBoneIndexByName(closest, 'door_pside_r');
+        // const boneBLDoor = native.getEntityBoneIndexByName(closest, 'door_pside_f');
+
+        // const posFRDoor = native.getWorldPositionOfEntityBone(closest, boneFRDoor);
+        // const posFLDoor = native.getWorldPositionOfEntityBone(closest, boneFLDoor);
+        // const posBRDoor = native.getWorldPositionOfEntityBone(closest, boneBRDoor);
+        // const posBLDoor = native.getWorldPositionOfEntityBone(closest, boneBLDoor);
+
+        // const distFLDoor = native.getDistanceBetweenCoords(
+        //     posFLDoor.x,
+        //     posFLDoor.y,
+        //     posFLDoor.z,
+        //     alt.Player.local.pos.x,
+        //     alt.Player.local.pos.y,
+        //     alt.Player.local.pos.z,
+        //     true
+        // );
+
+        // alt.log(JSON.stringify({ minDist, distFLDoor }));
+
+        alt.log(`Closest Door Index: ${closestDoor}`);
+        alt.log(`Closest Distance: ${closestDist}`);
+        if (closestDist <= minDist) {
+            if (!native.areAnyVehicleSeatsFree(closest.vehicle.scriptID)) {
+                alt.log('no free seats left');
+
+                return;
+            }
+
+            if (native.isVehicleSeatFree(closest.vehicle.scriptID, closestDoor, false)) {
+                native.taskEnterVehicle(
+                    alt.Player.local.scriptID,
+                    closest.vehicle.scriptID,
+                    5000,
+                    closestDoor,
+                    1.0,
+                    0,
+                    0
+                );
+                sitting = true;
+            }
+
+            if (sitting && native.getVehicleDoorLockStatus(closest.vehicle.scriptID) == 4) {
+                alt.setTimeout(() => {
+                    native.clearPedTasksImmediately(alt.Player.local.scriptID);
+                }, 1500);
+            }
+        }
+
+        // native.taskEnterVehicle(alt.Player.local.scriptID, closest, 0, 0, 1.0, 1, 0);
+        // native.setPedIntoVehicle(alt.Player.local.scriptID, closest, -2);
+
+        const busDriverStart = {
+            x: -1366.612,
+            y: 56.541,
+            z: 54.098,
+            model: 's_m_y_airworker',
+            heading: 45.0,
+        };
+
+        const busDriverEnd = {
+            x: 693.068,
+            y: 671.056,
+            z: 128.911,
+        };
+
+        loadModelAsync(busDriverStart.model).then(() => {
+            const busDriver = native.createPed(
+                1,
+                native.getHashKey(busDriverStart.model),
+                busDriverStart.x,
+                busDriverStart.y,
+                busDriverStart.z,
+                busDriverStart.heading,
                 false,
                 false
             );
-            status = true;
-        }
-    } else {
-        if (status == true) {
-            native.clearPedTasks(alt.Player.local.scriptID);
-            status = false;
-        }
-    }
-}, 10);
-
-// Hands be in air until 'x' gets released ////
-var hotkey = 79; //Change key - https://keycode.info/
-var handsUp = false;
-var status = false;
-var dict = 'missminuteman_1ig_2';
-native.requestAnimDict(dict);
-
-alt.on('keydown', (key) => {
-    // X Key pressed
-    if (key === hotkey) {
-        handsUp = true;
-        if (handsUp && native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
-            alt.everyTick(() => {
-                native.disableControlAction(2, 59, true);
+            alt.on('resourceStop', () => {
+                native.deleteVehicle(
+                    getClosestVehicle({ pos: native.getPedBoneCoords(busDriver, 31086, 0, 0, 0) }).vehicle.scriptID
+                );
+                native.deletePed(busDriver);
             });
-        }
+
+            native.giveWeaponToPed(busDriver, 0x1b06d571, 100, false, true);
+
+            native.requestAnimSet('move_m@drunk@verydrunk');
+
+            if (native.hasAnimSetLoaded('move_m@drunk@verydrunk')) {
+                native.setPedMovementClipset(busDriver, 'move_m@drunk@verydrunk', 0x3e800000);
+                native.setPedConfigFlag(busDriver, 100, true);
+            }
+
+            native.taskWanderStandard(busDriver, 10.0, 10);
+
+            native.taskVehicleDriveToCoordLongrange(
+                busDriver,
+                closest.vehicle.scriptID,
+                busDriverEnd.x,
+                busDriverEnd.y,
+                busDriverEnd.z,
+                120,
+                117,
+                15
+            );
+        });
     }
 });
-
-alt.on('keyup', (key) => {
-    if (key === hotkey) {
-        handsUp = false;
-        if (!handsUp && native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
-            alt.everyTick(() => {
-                native.enableControlAction(2, 59, true);
-            });
-        }
-    }
-});
-///////////////////////////////////////////////
 
 alt.on('consoleCommand', async (cmd, ...args) => {
-    if (cmd != 'anim') return;
+    if (cmd == 'bus') {
+    }
+    if (cmd == 'drunk') {
+        alt.emit(Action.PlayerGetDrunk);
+    }
+    if (cmd == 'clone') {
+        alt.log('player cloned');
 
-    alt.log('play animation');
-    const dic = 'gestures@f@standing@casual';
-    const anim = 'handsup_enter';
-    native.requestAnimDict(dic);
-    await WaitUntil(native.hasAnimDictLoaded, dic);
+        const ped = native.clonePed(
+            alt.Player.local.scriptID,
+            native.getEntityHeading(alt.Player.local.scriptID),
+            true,
+            true
+        );
 
-    native.taskPlayAnim(alt.Player.local.scriptID, dic, anim, 8.0, 8.0, 5000, 50, 0, false, false, false);
-    // native.taskPlayAnim(alt.Player.local.scriptID, dic, anim, 8.0, 8.0, -1, 50, 0, false, false, false);
-});
-
-let crouched = false;
-alt.on('keydown', (key) => {
-    if (key == 17) {
-        //ctrl
-        native.disableControlAction(0, 36, true);
-        if (
-            !native.isPlayerDead(alt.Player.local.scriptID) &&
-            !native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)
-        ) {
-            if (!native.isPauseMenuActive()) {
-                native.requestAnimSet('move_ped_crouched');
-                if (crouched) {
-                    native.clearPedTasks(alt.Player.local.scriptID);
-                    alt.setTimeout(() => {
-                        native.resetPedMovementClipset(alt.Player.local.scriptID, 0.45);
-                        crouched = false;
-                    }, 200);
-                } else {
-                    native.setPedMovementClipset(alt.Player.local.scriptID, 'move_ped_crouched', 0.45);
-                    crouched = true;
-                }
-            }
+        if (native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
+            native.setPedIntoVehicle(ped, alt.Player.local.vehicle.scriptID, -2);
         }
+
+        const closest = native.getClosestVehicle(
+            alt.Player.local.pos.x,
+            alt.Player.local.pos.y,
+            alt.Player.local.pos.z,
+            50,
+            0,
+            70
+        );
+        if (closest) {
+            native.setPedIntoVehicle(ped, closest, -1);
+        }
+
+        const target = {
+            x: -1291.7142333984375,
+            y: 83.43296813964844,
+            z: 54.8916015625,
+        };
+
+        native.taskWanderStandard(ped, 10.0, 10);
+        native.taskVehicleDriveToCoordLongrange(
+            ped,
+            alt.Player.local.vehicle.scriptID,
+            target.x,
+            target.y,
+            target.z,
+            60,
+            5,
+            10
+        );
+
+        native.giveWeaponToPed(ped, 0x1b06d571, 100, false, true);
+
+        // native.setPedIsDrunk(ped, true);
+
+        // native.explodePedHead(ped, 0x1b06d571);
+
+        // // Wind
+        // native.setWindSpeed(12.0);
+
+        // // playPedRingtone
+        // native.playPedRingtone('Remote_Ring', ped, true);
+
+        // // Money
+        // native.networkInitializeCash(100, 100);
+        // native.networkSpentCashDrop(100, true, true);
+        // native.setPedMoney(alt.Player.local.scriptID, 500);
+        // native.createMoneyPickups(alt.Player.local.pos.x, alt.Player.local.pos.y, alt.Player.local.pos.z, 100, 100, 0);
+        // // alt.log(native.getPedMoney(alt.Player.local.scriptID));
+        // native.requestAnimSet('move_m@drunk@verydrunk');
+
+        // if (native.hasAnimSetLoaded('move_m@drunk@verydrunk')) {
+        //     native.setPedMovementClipset(ped, 'move_m@drunk@verydrunk', 0x3e800000);
+        //     native.setPedConfigFlag(ped, 100, true);
+        // }
+
+        // native.setEntityAsMissionEntity(ped, true, false);
+        native.giveWeaponToPed(ped, 0x1b06d571, 100, false, true);
+        native.freezeEntityPosition(ped, false);
+        native.setPedCanRagdoll(ped, true);
+        native.setPedAlertness(ped, 3);
+        // native.setPedAllowedToDuck(ped, true);
+        // native.setPedCanRagdollFromPlayerImpact(ped, true);
+        // native.taskSetBlockingOfNonTemporaryEvents(ped, false);
+        native.setBlockingOfNonTemporaryEvents(ped, false);
+        native.setPedFleeAttributes(ped, 0, true);
+        native.setEntityInvincible(ped, false);
+        native.setPedSeeingRange(ped, 50);
+
+        alt.on('resourceStop', () => {
+            native.deletePed(ped);
+        });
     }
 });
 
-alt.onServer('Player:ready', async (veh) => {
-    alt.log(`Hello from alt:V Client`);
-
-    native.requestScriptAudioBank('ICE_FOOTSTEPS', false, 0);
-    native.requestScriptAudioBank('SNOW_FOOTSTEPS', false, 0);
-
-    native.setForceVehicleTrails(true);
-    native.setForcePedFootstepsTracks(true);
-
-    native.prepareMusicEvent('GLOBAL_KILL_MUSIC');
-    native.prepareMusicEvent('FM_INTRO_START');
-
-    native.triggerMusicEvent('GLOBAL_KILL_MUSIC');
-    native.triggerMusicEvent('FM_INTRO_START');
-
-    // const character = ped.GetMeta('character');
-
-    native.requestCutsceneWithPlaybackList('mp_intro_concat', 31, 8); // 103 = female, 31 = male
-    native.setCutsceneEntityStreamingFlags('MP_Male_Character', 0, 1);
-
-    // native.registerEntityForCutscene(0, character.Gender === Gender.Male ? "MP_Female_Character" : "MP_Male_Character" , 3, native.getHashKey(character.Gender === Gender.Male ? "mp_f_freemode_01" : "mp_m_freemode_01" ), 0);
-    // native.registerEntityForCutscene(0, 'MP_Female_Character', 3, native.getHashKey('mp_f_freemode_01'), 0);
-    // for (let i = 0; i <= 7; i++) {
-    //     native.setCutsceneEntityStreamingFlags('MP_Plane_Passenger_' + i, 0, 1);
-    //     native.registerEntityForCutscene(0, 'MP_Plane_Passenger_' + i, 3, native.getHashKey('mp_f_freemode_01'), 0);
-    //     native.registerEntityForCutscene(0, 'MP_Plane_Passenger_' + i, 3, native.getHashKey('mp_m_freemode_01'), 0);
-    // }
-
-    // Make sure our cutscene looks nice
-    native.newLoadSceneStartSphere(playFieldCoord.x, playFieldCoord.y, playFieldCoord.z, 1000, 0);
-
-    // native.setWeatherTypeNow('EXTRASUNNY');
-    native.startCutscene(6);
-
-    // load gender character
-    // native.registerEntityForCutscene(alt.Player.local.id, 'MP_Male_Character', 0, 0, 0);
-
-    await AsyncWait(22_000);
-    // Make sure our cutscene looks nice
-    native.newLoadSceneStartSphere(airportCoord.x, airportCoord.y, airportCoord.z, 1000, 0);
-    await AsyncWait(8_800);
-    // Cleanup and stop cutscene after it's finished
-    stopIntro();
+alt.on('keyup', async (key) => {
+    if (key == Key.B) {
+        // alt.emitServer('test');
+        alt.emit('PlacingModule:setObject', 'bus');
+    }
 });
 
-const stopIntro = async () => {
-    native.doScreenFadeOut(1000);
-    await AsyncWait(2000);
-    native.stopCutsceneImmediately();
-    native.triggerMusicEvent('GLOBAL_KILL_MUSIC');
-    await AsyncWait(2000);
-    native.doScreenFadeIn(1000);
+/**
+export function serverEvent<Event extends keyof alt.IServerEvent>(event?: Event | string) {
+    return function (target: any, property: Event | string) {
+        if (!event) event = property;
+        alt.on(event, target[property]);
+    };
+}
 
-    native.newLoadSceneStop();
-    native.setWeatherTypeNowPersist('XMAS');
-
-    native.playAmbientSpeech1(alt.Player.local.scriptID, 'GREET_ACROSS_STREET', 'SPEECH_PARAMS_STANDARD', 0);
-};
-
-export const WaitUntil = (cb: (...args) => boolean, ...args) => {
-    return new Promise((resolve: any, _) => {
-        const et = alt.everyTick(() => {
-            if (!cb(...args)) return;
-            alt.clearEveryTick(et);
-            resolve();
-        });
-    });
-};
-
-export const AsyncWait = (timeout: number) => {
-    return new Promise((resolve: any) => {
-        alt.setTimeout(resolve, timeout);
-    });
-};
+export function clientEvent(event?: string) {
+    return function (target: any, property: string) {
+        if (!event) event = property;
+        alt.onClient(event, target[property]);
+    };
+}
+*/

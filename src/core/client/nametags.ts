@@ -1,18 +1,15 @@
 import * as alt from 'alt-client';
 import native from 'natives';
+import { distance } from './lib/distance';
 
-export function distance(vector1: alt.Vector3, vector2: alt.Vector3) {
-    return Math.sqrt(
-        Math.pow(vector1.x - vector2.x, 2) + Math.pow(vector1.y - vector2.y, 2) + Math.pow(vector1.z - vector2.z, 2)
-    );
-}
-alt.everyTick(renderNametags);
-function renderNametags() {
+alt.everyTick(renderNameTags);
+
+function renderNameTags() {
     for (let player of alt.Player.all) {
         if (player != alt.Player.local && player.scriptID) {
             if (
                 distance(player.pos, alt.Player.local.pos) < 50 ||
-                // If in the same car - display tags
+                // TODO: If in the same car - display tags
                 native.isPedSittingInAnyVehicle(alt.Player.local.scriptID) ===
                     native.isPedSittingInAnyVehicle(player.scriptID)
             ) {

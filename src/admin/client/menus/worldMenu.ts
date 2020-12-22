@@ -9,12 +9,14 @@ import { Game } from '../utils/game';
 import { AbstractMenu } from './abstractMenu';
 import { AbstractSubMenu } from './abstractSubMenu';
 import { UIMenuListItem, UIMenuCheckboxItem, ItemsCollection, BadgeStyle, UIMenuItem } from '@durtyfree/altv-nativeui';
+import { ScreenAnim } from '../enums/screenAnimation';
 
 export class WorldMenu extends AbstractSubMenu {
     gameClockItem: UIMenuListItem;
     weatherMenu: WeatherMenu;
     cloudHatMenu: CloudHatMenu;
     timeCycleMenu: TimeCycleMenu;
+    animationMenu: AnimationMenu;
     artificialLights: UIMenuCheckboxItem;
     private freezeTime: UIMenuCheckboxItem;
 
@@ -23,6 +25,7 @@ export class WorldMenu extends AbstractSubMenu {
         this.weatherMenu = new WeatherMenu(this, 'World Weather');
         this.cloudHatMenu = new CloudHatMenu(this, 'World Cloud Hat');
         this.timeCycleMenu = new TimeCycleMenu(this, 'World Time Cycle');
+        this.animationMenu = new AnimationMenu(this, 'Screen Animation');
         this.addItem(
             (this.gameClockItem = new UIMenuListItem(
                 'Game Clock Hours',
@@ -56,6 +59,24 @@ class WeatherMenu extends AbstractSubMenu {
             let item = new UIMenuItem(Weather[+weather].toUpperCase());
             this.addItem(item, () => {
                 Game.setWeather(+weather);
+                Menu.selectItem(item, BadgeStyle.Tick);
+            });
+        });
+        this.menuObject.MenuOpen.on(() =>
+            Menu.selectItem(this.menuObject.MenuItems[Game.getCurrentWeather()], BadgeStyle.Tick)
+        );
+    }
+}
+class AnimationMenu extends AbstractSubMenu {
+    constructor(parentMenu: AbstractMenu, title: string) {
+        super(parentMenu, title);
+
+        this.addItem(new UIMenuItem('Stop All Animations'), () => game.animpostfxStopAll());
+        Enum.getValues(ScreenAnim).forEach((anim) => {
+            let item = new UIMenuItem(ScreenAnim[+anim].toUpperCase());
+            this.addItem(item, () => {
+                game.animpostfxStopAll();
+                game.animpostfxPlay(ScreenAnim[+anim], 0, true);
                 Menu.selectItem(item, BadgeStyle.Tick);
             });
         });

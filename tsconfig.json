@@ -20,7 +20,7 @@
         "outDir": "./resources",
         "rootDir": "./src",
         "downlevelIteration": true,
-        "preserveConstEnums": true,
+        "preserveConstEnums": false,
         "target": "ESNext"
     },
     "include": [
