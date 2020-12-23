@@ -17,22 +17,37 @@ export const WaitUntil = (cb: (...args) => boolean, ...args) => {
     });
 };
 
-export const loadModelAsync = (model) => {
+export const loadModelAsync = (model: string | number) => {
+    const maxCountLoadTry = 255;
     return new Promise((resolve, reject) => {
-        if (typeof model === 'string') model = native.getHashKey(model);
+        let modelNum: number;
+        if (typeof model === 'string') {
+            modelNum = native.getHashKey(model);
+        } else {
+            modelNum = model;
+        }
 
-        if (!native.isModelValid(model)) return reject(false);
+        if (!native.isModelValid(modelNum)) return reject(false);
 
-        if (native.hasModelLoaded(model)) return resolve(true);
+        if (native.hasModelLoaded(modelNum)) return resolve(true);
 
-        native.requestModel(model);
+        native.requestModel(modelNum);
 
+        let count = 0;
         let interval = alt.setInterval(() => {
-            if (native.hasModelLoaded(model)) {
+            if (count > maxCountLoadTry) {
+                reject(false);
+                alt.clearInterval(interval);
+                return;
+            }
+
+            if (native.hasModelLoaded(modelNum)) {
                 alt.clearInterval(interval);
                 return resolve(true);
             }
-        }, 100);
+
+            count += 1;
+        }, 5);
     });
 };
 
@@ -42,16 +57,16 @@ export async function loadAnim(dict) {
         native.requestAnimDict(dict);
 
         let count = 0;
-        let inter = alt.setInterval(() => {
+        let interval = alt.setInterval(() => {
             if (count > maxCountLoadTry) {
                 reject(false);
-                alt.clearInterval(inter);
+                alt.clearInterval(interval);
                 return;
             }
 
             if (native.hasAnimDictLoaded(dict)) {
                 resolve(true);
-                alt.clearInterval(inter);
+                alt.clearInterval(interval);
                 return;
             }
 

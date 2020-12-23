@@ -10,7 +10,7 @@
  */
 
 import * as alt from 'alt-client';
-import natives from 'natives';
+import native from 'natives';
 import * as NativeUI from '@durtyfree/altv-nativeui';
 
 const animDicts = JSON.parse(alt.File.read('@animAssets/animDictsCompact.json'));
@@ -67,6 +67,7 @@ alt.on('consoleCommand', (command, ...args) => {
 });
 
 alt.on('keyup', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (!animatorEnabled || menu.Visible) {
         return;
     }
@@ -173,32 +174,32 @@ const drawLongText = (
     useDropShadow = true,
     center = false
 ) => {
-    natives.setTextFont(fontType);
-    natives.setTextProportional(false);
-    natives.setTextScale(scale, scale);
-    natives.setTextColour(r, g, b, a);
-    natives.setTextEdge(2, 0, 0, 0, 150);
+    native.setTextFont(fontType);
+    native.setTextProportional(false);
+    native.setTextScale(scale, scale);
+    native.setTextColour(r, g, b, a);
+    native.setTextEdge(2, 0, 0, 0, 150);
 
     if (useOutline) {
-        natives.setTextOutline();
+        native.setTextOutline();
     }
     if (useDropShadow) {
-        natives.setTextDropshadow(0, 0, 0, 0, 255);
-        natives.setTextDropShadow();
+        native.setTextDropshadow(0, 0, 0, 0, 255);
+        native.setTextDropShadow();
     }
 
-    natives.setTextCentre(center);
-    natives.beginTextCommandDisplayText('CELL_EMAIL_BCON');
+    native.setTextCentre(center);
+    native.beginTextCommandDisplayText('CELL_EMAIL_BCON');
 
     text.match(/.{1,99}/g).forEach((textBlock) => {
-        natives.addTextComponentSubstringPlayerName(textBlock);
+        native.addTextComponentSubstringPlayerName(textBlock);
     });
-    natives.endTextCommandDisplayText(x, y, 0.0);
+    native.endTextCommandDisplayText(x, y, 0.0);
 };
 
 const stopAnim = () => {
-    natives.clearPedTasks(player.scriptID);
-    natives.clearPedSecondaryTask(player.scriptID);
+    native.clearPedTasks(player.scriptID);
+    native.clearPedSecondaryTask(player.scriptID);
 };
 
 const playAnim = () => {
@@ -207,7 +208,7 @@ const playAnim = () => {
     let res = loadAnim(selectedDictionary.DictionaryName);
 
     res.then(() => {
-        natives.taskPlayAnim(
+        native.taskPlayAnim(
             player.scriptID,
             selectedDictionary.DictionaryName,
             selectedDictionary.Animations[selectedAnimNameIndex],
@@ -229,22 +230,22 @@ const playAnim = () => {
 
 export const loadAnim = (dictName) => {
     return new Promise((resolve, reject) => {
-        if (!natives.doesAnimDictExist(dictName)) {
+        if (!native.doesAnimDictExist(dictName)) {
             reject(new Error(`Animation dictionary does not exist: ${dictName}`));
             return;
         }
 
-        if (natives.hasAnimDictLoaded(dictName)) {
+        if (native.hasAnimDictLoaded(dictName)) {
             resolve(true);
             return;
         }
 
-        natives.requestAnimDict(dictName);
+        native.requestAnimDict(dictName);
 
         const deadline = new Date().getTime() + 1000 * 10;
 
         const inter = alt.setInterval(() => {
-            if (natives.hasAnimDictLoaded(dictName)) {
+            if (native.hasAnimDictLoaded(dictName)) {
                 alt.clearInterval(inter);
                 //alt.log(`Animation dictionary loaded: ${dictName}`)
                 resolve(true);

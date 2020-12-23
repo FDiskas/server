@@ -3,6 +3,7 @@ import native from 'natives';
 
 let crouched = false;
 alt.on('keydown', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key == 17) {
         //ctrl
         native.disableControlAction(0, 36, true);

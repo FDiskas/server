@@ -1,4 +1,6 @@
 import * as alt from 'alt-client';
+import * as native from 'natives';
+
 import { Key } from '../enums/key';
 import { MainMenu } from '../menus/mainMenu';
 import { Menu as TypeMenu } from '@durtyfree/altv-nativeui';
@@ -27,6 +29,7 @@ class MenuPool extends AbstractMenuPool {
     init() {
         let mainMenu = new MainMenu(this, 'Main Menu');
         alt.on('keyup', (key: number) => {
+            if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
             if (key == Key.M) {
                 if (!this.isAnyMenuOpen()) mainMenu.menuObject.Open();
             }

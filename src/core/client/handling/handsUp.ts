@@ -9,6 +9,7 @@ var dict = 'missminuteman_1ig_2';
 native.requestAnimDict(dict);
 
 alt.on('keydown', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     // X Key pressed
     if (key === hotkey) {
         handsUp = true;
@@ -21,6 +22,7 @@ alt.on('keydown', (key) => {
 });
 
 alt.on('keyup', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key === hotkey) {
         handsUp = false;
         if (!handsUp && native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {

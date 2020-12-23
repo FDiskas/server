@@ -26,7 +26,9 @@ const windowList = [
 ];
 
 alt.on('keydown', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key === Key.E) {
+        alt.log('isMenuOpen: ' + alt.isMenuOpen());
         if (alt.Player.local.vehicle) {
             let availableWindows = windowList.filter(
                 (windowName) => native.getEntityBoneIndexByName(alt.Player.local.vehicle.scriptID, windowName) !== -1

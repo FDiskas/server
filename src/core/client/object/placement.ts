@@ -98,6 +98,7 @@ alt.everyTick(() => {
 });
 
 alt.on('keyup', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     //SPACE to abort it
     if (key === 0x20) {
         alt.log('PlacingModule: Object deleted');

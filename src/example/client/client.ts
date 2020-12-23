@@ -2,6 +2,7 @@ import * as alt from 'alt-client';
 import native from 'natives';
 
 alt.on('keyup', async (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key == 'B'.charCodeAt(0)) {
         const closest = native.getClosestVehicle(
             alt.Player.local.pos.x,

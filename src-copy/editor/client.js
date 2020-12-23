@@ -1,5 +1,5 @@
 import * as alt from 'alt';
-import * as game from 'natives';
+import * as native from 'natives';
 
 let loaded = false;
 let opened = false;
@@ -44,6 +44,7 @@ view.on('editorOpened', (active) => {
 });
 
 alt.on('keyup', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (!loaded) return;
 
     // list of key codes https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes

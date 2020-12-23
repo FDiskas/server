@@ -29,6 +29,7 @@ let inter = alt.setInterval(() => {
 }, 50);
 
 alt.on('keydown', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     /* 0x72 F3 */
     if (key == 0x79 && view) {
         view.destroy();

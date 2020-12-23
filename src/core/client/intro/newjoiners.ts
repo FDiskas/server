@@ -10,6 +10,7 @@ alt.onServer(Action.PlayerReady, async (veh) => {
     native.doScreenFadeOut(1);
 
     alt.on('keyup', async (key) => {
+        if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
         if (key == 'I'.charCodeAt(0)) {
             stopIntro();
         }

@@ -7,6 +7,7 @@ import { soundList } from '../enums/sounds';
 import { getClosestPed } from '../lib/distance';
 
 alt.on('keydown', async (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key === Key.E) {
         if (native.isPedOnFoot(alt.Player.local.scriptID)) {
             // Check if there is a ped in range
@@ -31,6 +32,7 @@ alt.onServer(Action.PlayerWhistle, (scriptId: number) => {
 });
 
 alt.on('keyup', (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key === Key.E) {
         alt.emit(Action.PlayerClearAnim);
     }

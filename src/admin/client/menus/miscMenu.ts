@@ -1,5 +1,5 @@
 import * as alt from 'alt-client';
-import game from 'natives';
+import * as native from 'natives';
 import { Font } from '../enums/font';
 import { Player } from '../utils/player';
 import { Text2D } from '../common/text2D';
@@ -33,7 +33,7 @@ export class MiscMenu extends AbstractSubMenu {
             let x = +(await Game.getUserInput());
             let y = +(await Game.getUserInput());
             let z = +(await Game.getUserInput());
-            game.setPedCoordsKeepVehicle(
+            native.setPedCoordsKeepVehicle(
                 alt.Player.local.scriptID,
                 isNaN(x) ? 0 : x,
                 isNaN(y) ? 0 : y,
@@ -72,9 +72,11 @@ export class MiscMenu extends AbstractSubMenu {
                       'misc:drawPlayerSpeed',
                       () =>
                           new Text2D(
-                              `~y~m/s~s~ ${game.getEntitySpeed(alt.Player.local.scriptID).toFixed(3)}` +
-                                  ` ~y~km/h~s~ ${(game.getEntitySpeed(alt.Player.local.scriptID) * 3.6).toFixed(3)}` +
-                                  ` ~y~mph~s~ ${(game.getEntitySpeed(alt.Player.local.scriptID) * 2.23694).toFixed(3)}`,
+                              `~y~m/s~s~ ${native.getEntitySpeed(alt.Player.local.scriptID).toFixed(3)}` +
+                                  ` ~y~km/h~s~ ${(native.getEntitySpeed(alt.Player.local.scriptID) * 3.6).toFixed(3)}` +
+                                  ` ~y~mph~s~ ${(native.getEntitySpeed(alt.Player.local.scriptID) * 2.23694).toFixed(
+                                      3
+                                  )}`,
                               [0.5, 0.9],
                               0.5,
                               Font.ChaletComprimeCologne,
@@ -96,10 +98,10 @@ export class MiscMenu extends AbstractSubMenu {
                                       //   ` - ID ${vehicle.id}` +
                                       //   ` - TYPE ${vehicle.type}` +
                                       ` - MODEL ${vehicle.model}` +
-                                      ` - SEATS ${game.getVehicleModelNumberOfSeats(vehicle.model)}` +
+                                      ` - SEATS ${native.getVehicleModelNumberOfSeats(vehicle.model)}` +
                                       //   ` - BODY ${game.getVehicleBodyHealth(vehicle.scriptID)}` +
                                       //   ` - ENGINE ${game.getVehicleEngineHealth(vehicle.scriptID)}` +
-                                      ` - PETROL TANK ${game.getVehiclePetrolTankHealth(vehicle.scriptID)}`,
+                                      ` - PETROL TANK ${native.getVehiclePetrolTankHealth(vehicle.scriptID)}`,
                                   vehicle
                               )
                           );
@@ -108,8 +110,8 @@ export class MiscMenu extends AbstractSubMenu {
                                   `SCRIPTID ${player.scriptID}` +
                                       ` - ID ${player.id} - TYPE ${player.type}` +
                                       ` - MODEL ${player.model}` +
-                                      ` - HEALTH ${game.getEntityHealth(player.scriptID)}` +
-                                      ` - ARMOR ${game.getPedArmour(player.scriptID)}`,
+                                      ` - HEALTH ${native.getEntityHealth(player.scriptID)}` +
+                                      ` - ARMOR ${native.getPedArmour(player.scriptID)}`,
                                   player
                               )
                           );
@@ -124,7 +126,7 @@ export class MiscMenu extends AbstractSubMenu {
                       'misc:drawRaycastInfo',
                       () => {
                           let entity = alt.Entity.getByScriptID(
-                              game.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1]
+                              native.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1]
                           );
                           if (!entity) return;
                           let entityText =
@@ -134,14 +136,14 @@ export class MiscMenu extends AbstractSubMenu {
                               ` - POS (${entity.pos.x.toFixed(3)}` +
                               ` - ${entity.pos.y.toFixed(3)}` +
                               ` - ${entity.pos.z.toFixed(3)})` +
-                              ` - ${game.isEntityDead(entity.scriptID, false) ? 'DEAD' : 'ALIVE'}` +
+                              ` - ${native.isEntityDead(entity.scriptID, false) ? 'DEAD' : 'ALIVE'}` +
                               ` - DISTANCE ${Game.getDistanceBetweenCoords(alt.Player.local.pos, entity.pos).toFixed(
                                   3
                               )}`;
                           if (entity instanceof alt.Vehicle)
                               entityText = entityText.concat(
                                   ` - ${
-                                      game.getVehicleDoorsLockedForPlayer(entity.scriptID, alt.Player.local.scriptID)
+                                      native.getVehicleDoorsLockedForPlayer(entity.scriptID, alt.Player.local.scriptID)
                                           ? 'LOCKED'
                                           : 'UNLOCKED'
                                   }`
@@ -158,20 +160,21 @@ export class MiscMenu extends AbstractSubMenu {
                       'misc:hideHud',
                       () =>
                           Enum.getValues(HudComponent).forEach((component) =>
-                              game.hideHudComponentThisFrame(+component)
+                              native.hideHudComponentThisFrame(+component)
                           ),
                       0
                   )
                 : tick.clear('misc:hideHud');
-            game.displayRadar(!state);
+            native.displayRadar(!state);
         });
         this.addItem((this.creditsItem = new UIMenuItem('About\\Credits', `Trainer #1395 for ~b~alt:V~s~.`)));
         this.creditsItem.LeftBadge = BadgeStyle.Heart;
         this.creditsItem.RightLabel = `~h~ `;
         alt.on('keyup', (key: number) => {
+            if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
             if (key == Key.F7 && this.teleportToMarkerItem.Checked) {
-                let handle = game.getFirstBlipInfoId(8);
-                if (game.doesBlipExist(handle)) Player.teleportTo(game.getBlipInfoIdCoord(handle) as alt.Vector3);
+                let handle = native.getFirstBlipInfoId(8);
+                if (native.doesBlipExist(handle)) Player.teleportTo(native.getBlipInfoIdCoord(handle) as alt.Vector3);
             }
         });
     }

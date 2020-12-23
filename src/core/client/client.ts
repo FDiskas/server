@@ -20,6 +20,7 @@ import { Key } from './enums/keys';
 import { Action } from './enums/actions';
 
 alt.on('keyup', async (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key == 'B'.charCodeAt(0)) {
         const closest = native.getClosestVehicle(
             alt.Player.local.pos.x,
@@ -138,6 +139,7 @@ alt.on('consoleCommand', async (cmd, ...args) => {
 });
 
 alt.on('keyup', async (key) => {
+    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key == Key.B) {
         // alt.emitServer('test');
         alt.emit('PlacingModule:setObject', 'bus');
