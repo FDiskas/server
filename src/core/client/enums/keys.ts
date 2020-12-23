@@ -3,6 +3,7 @@ export const enum Key {
     F7 = 118,
     Esc = 27,
     B = 66,
+    E = 69,
 }
 
 export const enum NativeKey {

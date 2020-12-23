@@ -25,3 +25,8 @@ export function getClosestVehicle(player: { pos: alt.IVector3 }): { vehicle: alt
 
     return data;
 }
+
+export function getClosesObject(objectList: string[]) {
+    objectList.forEach((object) => {});
+    alt.Player.local;
+}

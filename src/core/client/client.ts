@@ -1,6 +1,5 @@
 import * as alt from 'alt-client';
 import native from 'natives';
-import { distance, getClosestVehicle } from './lib/distance';
 import './nametags';
 import './handling/handsUp';
 import './handling/crouch';
@@ -10,6 +9,11 @@ import './intro/newjoiners';
 // import './object/placement';
 // import './weather/weather';
 import './AI/takeFromAirport';
+import './vehicle/doors';
+import './vehicle/enter';
+
+///// ADMIN
+import './vehicle/tags';
 
 import { Key } from './enums/keys';
 import { Action } from './enums/actions';
@@ -25,87 +29,6 @@ alt.on('keyup', async (key) => {
             70
         );
         native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 2, 1.0, 2, 0);
-    }
-});
-alt.on(Action.PlayerEnterVehicle, () => {
-    const closest = getClosestVehicle(alt.Player.local);
-
-    let sitting = false;
-    const minDist = 2;
-
-    /*
-        -1 = driver
-        0 = passenger - door_pside_f
-        1 = left back seat - door_dside_r
-        2 = right back seat - door_pside_r
-        3 = outside left 
-        4 = outside right
-
-        door_dside_f,   //Door left, front
-        door_dside_r,   //Door left, back
-        door_pside_f,   //Door right, front
-        door_pside_r,   //Door right, back
-        */
-    const seatsList = [
-        'seat_f',
-        'seat_r',
-        'seat_dside_f',
-        'seat_pside_f',
-        'seat_dside_r',
-        'seat_pside_r',
-        'seat_dside_r1',
-        'seat_dside_r2',
-        'seat_dside_r3',
-        'seat_dside_r4',
-        'seat_dside_r5',
-        'seat_dside_r6',
-        'seat_dside_r7',
-        'seat_pside_r1',
-        'seat_pside_r2',
-        'seat_pside_r3',
-        'seat_pside_r4',
-        'seat_pside_r5',
-        'seat_pside_r6',
-        'seat_pside_r7',
-    ];
-    let closestSeat = 0;
-    let closestDist = 5;
-    // Filter only available seats
-    let availableSeats = seatsList.filter(
-        (seatName) => native.getEntityBoneIndexByName(closest.vehicle.scriptID, seatName) !== -1
-    );
-    availableSeats.forEach((seat, seatIndex) => {
-        alt.log(`Seat: ${seat}, Index: ${seatIndex - 1}`);
-    });
-
-    availableSeats.forEach((seat, seatIndex) => {
-        const seatBone = native.getEntityBoneIndexByName(closest.vehicle.scriptID, seat);
-        const seatPos = native.getWorldPositionOfEntityBone(closest.vehicle.scriptID, seatBone);
-        const seatDist = distance({ x: seatPos.x, y: seatPos.y, z: seatPos.z }, alt.Player.local.pos);
-
-        if (closestDist > seatDist) {
-            closestSeat = seatIndex - 1;
-            closestDist = seatDist;
-        }
-    });
-
-    if (closestDist <= minDist) {
-        alt.log(`Supistos durys: ${closestSeat} Dist: ${closestDist}`);
-        if (!native.areAnyVehicleSeatsFree(closest.vehicle.scriptID)) {
-            alt.log('no free seats left');
-
-            return;
-        }
-
-        native.taskEnterVehicle(alt.Player.local.scriptID, closest.vehicle.scriptID, 10000, closestSeat, 1.0, 0, 0);
-        // native.setPedIntoVehicle(alt.Player.local.scriptID, closest.vehicle.scriptID, closestSeat - 1);
-        sitting = true;
-
-        if (sitting && native.getVehicleDoorLockStatus(closest.vehicle.scriptID) == 4) {
-            alt.setTimeout(() => {
-                native.clearPedTasksImmediately(alt.Player.local.scriptID);
-            }, 1500);
-        }
     }
 });
 
@@ -226,67 +149,3 @@ export function clientEvent(event?: string) {
     };
 }
 */
-
-const vehicleTick = alt.everyTick(renderNameTags);
-alt.on('resourceStop', () => {
-    alt.clearEveryTick(vehicleTick);
-});
-
-function renderNameTags() {
-    const seatsList = [
-        'seat_f',
-        'seat_r',
-        'seat_dside_f',
-        'seat_dside_r',
-        'seat_pside_f',
-        'seat_pside_r',
-        'seat_dside_r1',
-        'seat_dside_r2',
-        'seat_dside_r3',
-        'seat_dside_r4',
-        'seat_dside_r5',
-        'seat_dside_r6',
-        'seat_dside_r7',
-        'seat_pside_r1',
-        'seat_pside_r2',
-        'seat_pside_r3',
-        'seat_pside_r4',
-        'seat_pside_r5',
-        'seat_pside_r6',
-        'seat_pside_r7',
-    ];
-
-    for (let vehicle of alt.Vehicle.all) {
-        ///////////////////////////////////
-        // const allSeats = native.getVehicleModelNumberOfSeats(vehicle.model);
-        // let availableSeats = seatsList.filter(
-        //     (seatName) => native.getEntityBoneIndexByName(vehicle.scriptID, seatName) !== -1
-        // );
-
-        for (let i = 0; i < seatsList.length; i++) {
-            const seatBone = native.getEntityBoneIndexByName(vehicle.scriptID, seatsList[i]);
-            if (seatBone !== -1) {
-                const seatPos = native.getWorldPositionOfEntityBone(vehicle.scriptID, seatBone);
-                // alt.log(JSON.stringify({ seatBone, seatPos }));
-
-                let scale =
-                    (1 / distance(native.getGameplayCamCoord(), { ...seatPos })) *
-                    20 *
-                    ((1 / native.getGameplayCamFov()) * 100);
-                native.setTextScale(0, 0.04 * scale);
-                native.setDrawOrigin(seatPos.x, seatPos.y, seatPos.z, false);
-                native.beginTextCommandDisplayText('STRING');
-                native.setTextFont(4);
-                native.setTextOutline();
-                native.setTextCentre(true);
-                native.setTextProportional(true);
-                native.setTextColour(255, 255, 255, 255);
-                native.addTextComponentSubstringPlayerName(`${seatsList[i]} (${i - 1})`);
-                native.endTextCommandDisplayText(0, 0, 0);
-                native.clearDrawOrigin();
-            }
-        }
-
-        ////////////////////////////////////////
-    }
-}

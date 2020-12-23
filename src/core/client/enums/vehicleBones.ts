@@ -1,4 +1,4 @@
-export const enum VehicleBones {
+export enum VehicleBones {
     'chassis',
     'chassis_lowlod',
     'chassis_dummy',
