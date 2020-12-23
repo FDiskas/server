@@ -5,4 +5,11 @@ export const enum Action {
     TakeBusToGarage = 'Bus:To:Garage',
     PlayerEnterVehicle = 'Player:EnterVehicle',
     PlayerExitVehicle = 'Player:ExitVehicle',
+    PlayerToggleCarWindow = 'Player:Toggle:Vehicle:Window',
+    PlayerOpenCarWindow = 'Player:Open:Vehicle:Window',
+    PlayerCloseCarWindow = 'Player:Close:Vehicle:Window',
+    PlayerWhistle = 'Player:Sound:Whistle',
+    PlayerPlayAnim = 'Player:Play:Animation',
+    PlayerClearAnim = 'Player:Clear:Animation',
+    PlayerPlaySound = 'Player:Play:Sound',
 }

@@ -35,3 +35,27 @@ export const loadModelAsync = (model) => {
         }, 100);
     });
 };
+
+export async function loadAnim(dict) {
+    const maxCountLoadTry = 255;
+    return new Promise((resolve, reject) => {
+        native.requestAnimDict(dict);
+
+        let count = 0;
+        let inter = alt.setInterval(() => {
+            if (count > maxCountLoadTry) {
+                reject(false);
+                alt.clearInterval(inter);
+                return;
+            }
+
+            if (native.hasAnimDictLoaded(dict)) {
+                resolve(true);
+                alt.clearInterval(inter);
+                return;
+            }
+
+            count += 1;
+        }, 5);
+    });
+}

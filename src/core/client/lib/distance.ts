@@ -26,6 +26,19 @@ export function getClosestVehicle(player: { pos: alt.IVector3 }): { vehicle: alt
     return data;
 }
 
+export function getClosestPed(player: alt.Player) {
+    let data = { ped: null, distance: 0 };
+    alt.Player.all.forEach((ped) => {
+        let dis = distance(player.pos, ped.pos);
+
+        if (player.scriptID !== ped.scriptID && (dis < data.distance || data.distance == 0)) {
+            data = { ped: ped.scriptID, distance: dis };
+        }
+    });
+
+    return data;
+}
+
 export function getClosesObject(objectList: string[]) {
     objectList.forEach((object) => {});
     alt.Player.local;

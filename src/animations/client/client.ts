@@ -13,7 +13,7 @@ import * as alt from 'alt-client';
 import natives from 'natives';
 import * as NativeUI from '@durtyfree/altv-nativeui';
 
-const animDicts = JSON.parse(alt.File.read('./animDictsCompact.json'));
+const animDicts = JSON.parse(alt.File.read('@animAssets/animDictsCompact.json'));
 const player = alt.Player.local;
 
 let animatorEnabled = false;

@@ -1,5 +1,6 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
+import { Action } from '../enums/actions';
 import { Key } from '../enums/keys';
 import { distance } from '../lib/distance';
 
@@ -25,7 +26,6 @@ const windowList = [
 ];
 
 alt.on('keydown', (key) => {
-    let windowIsDown = false;
     if (key === Key.E) {
         if (alt.Player.local.vehicle) {
             let availableWindows = windowList.filter(
@@ -48,19 +48,21 @@ alt.on('keydown', (key) => {
                 }
             }
 
-            alt.setTimeout(() => {
-                if (!windowIsDown) {
-                    native.rollDownWindow(alt.Player.local.vehicle.scriptID, data.window);
-                    windowIsDown = true;
-                }
-            }, 100);
+            // alt.Player.local.vehicle.scriptID
 
-            alt.on('keyup', (key) => {
-                if (key === Key.E && windowIsDown) {
-                    windowIsDown = false;
-                    native.rollUpWindow(alt.Player.local.vehicle.scriptID, data.window);
-                }
-            });
+            alt.emitServer(Action.PlayerToggleCarWindow, data.window);
         }
     }
+});
+
+// TODO: remove workaround https://github.com/altmp/altv-issues/issues/737
+alt.onServer(Action.PlayerOpenCarWindow, (windowIndex) => {
+    // native.playSound();
+    // native.playSoundFromEntity(soundId: int, audioName: string, entity: Entity, audioRef: string, isNetwork: boolean, p5: Any);
+    alt.log('Open window: ' + windowIndex);
+    native.rollDownWindow(alt.Player.local.vehicle.scriptID, windowIndex); // alt.Player.local.vehicle
+});
+alt.onServer(Action.PlayerCloseCarWindow, (windowIndex) => {
+    alt.log('Close window: ' + windowIndex);
+    native.rollUpWindow(alt.Player.local.vehicle.scriptID, windowIndex); // alt.Player.local.vehicle
 });

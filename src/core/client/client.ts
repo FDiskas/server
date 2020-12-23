@@ -3,9 +3,10 @@ import native from 'natives';
 import './nametags';
 import './handling/handsUp';
 import './handling/crouch';
-import './animations/drunk';
+import './animations';
+import './sounds';
 import './core/keyBindings';
-import './intro/newjoiners';
+// import './intro/newjoiners';
 // import './object/placement';
 // import './weather/weather';
 import './AI/takeFromAirport';
@@ -13,7 +14,7 @@ import './vehicle/doors';
 import './vehicle/enter';
 
 ///// ADMIN
-import './vehicle/tags';
+// import './vehicle/tags';
 
 import { Key } from './enums/keys';
 import { Action } from './enums/actions';
@@ -48,7 +49,7 @@ alt.on('consoleCommand', async (cmd, ...args) => {
             true
         );
 
-        if (native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
+        if (alt.Player.local.vehicle && native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
             native.setPedIntoVehicle(ped, alt.Player.local.vehicle.scriptID, -2);
         }
 
@@ -71,16 +72,18 @@ alt.on('consoleCommand', async (cmd, ...args) => {
         };
 
         native.taskWanderStandard(ped, 10.0, 10);
-        native.taskVehicleDriveToCoordLongrange(
-            ped,
-            alt.Player.local.vehicle.scriptID,
-            target.x,
-            target.y,
-            target.z,
-            60,
-            5,
-            10
-        );
+        if (alt.Player.local.vehicle) {
+            native.taskVehicleDriveToCoordLongrange(
+                ped,
+                alt.Player.local.vehicle.scriptID,
+                target.x,
+                target.y,
+                target.z,
+                60,
+                5,
+                10
+            );
+        }
 
         native.giveWeaponToPed(ped, 0x1b06d571, 100, false, true);
 
@@ -120,7 +123,14 @@ alt.on('consoleCommand', async (cmd, ...args) => {
         native.setEntityInvincible(ped, false);
         native.setPedSeeingRange(ped, 50);
 
+        const whistle = alt.setInterval(() => {
+            alt.emitServer(Action.PlayerWhistle, native.getPedBoneCoords(ped, 0x796e, 0, 0, 0), ped);
+        }, 5000);
+
         alt.on('resourceStop', () => {
+            if (whistle) {
+                alt.clearInterval(whistle);
+            }
             alt.log('Resouce core stopped');
             native.deletePed(ped);
         });
