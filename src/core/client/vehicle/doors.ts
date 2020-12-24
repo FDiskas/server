@@ -2,7 +2,7 @@ import * as alt from 'alt-client';
 import * as native from 'natives';
 import { Action } from '../enums/actions';
 import { Key } from '../enums/keys';
-import { distance } from '../lib/distance';
+import { distance, getClosestVehicle } from '../lib/distance';
 
 const windowList = [
     'window_lf',
@@ -25,46 +25,67 @@ const windowList = [
     'window_rr3',
 ];
 
-alt.on('keydown', (key) => {
-    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
-    if (key === Key.E) {
-        alt.log('isMenuOpen: ' + alt.isMenuOpen());
-        if (alt.Player.local.vehicle) {
-            let availableWindows = windowList.filter(
-                (windowName) => native.getEntityBoneIndexByName(alt.Player.local.vehicle.scriptID, windowName) !== -1
+alt.on(Action.PlayerToggleCarWindow, () => {
+    if (alt.Player.local.vehicle) {
+        let availableWindows = windowList.filter(
+            (windowName) => native.getEntityBoneIndexByName(alt.Player.local.vehicle.scriptID, windowName) !== -1
+        );
+
+        const data = { window: -1, distance: 0 };
+        for (const windowIndex in availableWindows) {
+            const windowBone = native.getEntityBoneIndexByName(
+                alt.Player.local.vehicle.scriptID,
+                availableWindows[windowIndex]
             );
+            const windowPos = native.getWorldPositionOfEntityBone(alt.Player.local.vehicle.scriptID, windowBone);
+            const windowDist = distance(alt.Player.local.pos, { ...windowPos });
 
-            const data = { window: -1, distance: 0 };
-            for (const windowIndex in availableWindows) {
-                const windowBone = native.getEntityBoneIndexByName(
-                    alt.Player.local.vehicle.scriptID,
-                    availableWindows[windowIndex]
-                );
-                const windowPos = native.getWorldPositionOfEntityBone(alt.Player.local.vehicle.scriptID, windowBone);
-                const windowDist = distance(alt.Player.local.pos, { ...windowPos });
-                alt.log(JSON.stringify({ window: availableWindows[windowIndex], windowBone, windowPos, windowDist }));
-
-                if (windowDist < data.distance || data.distance == 0) {
-                    data.window = parseInt(windowIndex);
-                    data.distance = windowDist;
-                }
+            if (windowDist < data.distance || data.distance == 0) {
+                data.window = parseInt(windowIndex);
+                data.distance = windowDist;
             }
-
-            // alt.Player.local.vehicle.scriptID
-
-            alt.emitServer(Action.PlayerToggleCarWindow, data.window);
         }
+
+        alt.emitServer(Action.PlayerToggleCarWindow, data.window);
     }
+});
+
+alt.on(Action.PlayerToggleCarDoor, () => {
+    const doorList = {
+        handle_dside_f: -1,
+        handle_pside_f: 0,
+        handle_pside_r: 1,
+        handle_dside_r: 2,
+    };
+    const plyPos = alt.Player.local.pos;
+    const vehicle = getClosestVehicle(alt.Player.local).vehicle;
+    let closestDoor;
+    let closestDist = 1000;
+
+    Object.keys(doorList).forEach((handle) => {
+        const doorBone = native.getEntityBoneIndexByName(vehicle.scriptID, handle);
+        const doorPos = native.getWorldPositionOfEntityBone(vehicle.scriptID, doorBone);
+        const doorDist = distance({ x: doorPos.x, y: doorPos.y, z: doorPos.z }, plyPos);
+
+        if (!closestDoor || closestDist > doorDist) {
+            closestDoor = handle;
+            closestDist = doorDist;
+            if (doorDist <= 0.1) return;
+        }
+    });
+    alt.emitServer(Action.PlayerToggleCarDoor, vehicle.id, doorList[closestDoor]);
 });
 
 // TODO: remove workaround https://github.com/altmp/altv-issues/issues/737
 alt.onServer(Action.PlayerOpenCarWindow, (windowIndex) => {
-    // native.playSound();
-    // native.playSoundFromEntity(soundId: int, audioName: string, entity: Entity, audioRef: string, isNetwork: boolean, p5: Any);
-    alt.log('Open window: ' + windowIndex);
-    native.rollDownWindow(alt.Player.local.vehicle.scriptID, windowIndex); // alt.Player.local.vehicle
+    native.rollDownWindow(alt.Player.local.vehicle.scriptID, windowIndex);
 });
 alt.onServer(Action.PlayerCloseCarWindow, (windowIndex) => {
-    alt.log('Close window: ' + windowIndex);
-    native.rollUpWindow(alt.Player.local.vehicle.scriptID, windowIndex); // alt.Player.local.vehicle
+    native.rollUpWindow(alt.Player.local.vehicle.scriptID, windowIndex);
+});
+alt.onServer(Action.PlayerOpenCarDoor, (vehicle: alt.Vehicle, doorIndex) => {
+    native.taskOpenVehicleDoor(alt.Player.local.scriptID, vehicle.scriptID, 10000, doorIndex, 1.0);
+});
+alt.onServer(Action.PlayerCloseCarDoor, (vehicle: alt.Vehicle, windowIndex) => {
+    native.playVehicleDoorCloseSound(vehicle.scriptID, windowIndex);
 });

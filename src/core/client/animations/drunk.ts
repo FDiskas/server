@@ -16,6 +16,8 @@ alt.on(Action.PlayerGetDrunk, async () => {
 
     native.animpostfxStopAll();
     native.animpostfxPlay('DrugsMichaelAliensFightIn', 0, false);
+
+    // FIXME: Ugly
     alt.setTimeout(() => {
         native.animpostfxPlay('DrugsMichaelAliensFight', 0, true);
         alt.setTimeout(() => {
@@ -27,7 +29,9 @@ alt.on(Action.PlayerGetDrunk, async () => {
                 try {
                     alt.clearEveryTick(turnTick);
                     alt.clearInterval(turnWeals);
-                } catch (e) {}
+                } catch (e) {
+                    alt.logError(e);
+                }
             }, 10000);
         }, 60000);
     }, 5000);

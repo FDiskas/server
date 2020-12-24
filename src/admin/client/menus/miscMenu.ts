@@ -95,12 +95,12 @@ export class MiscMenu extends AbstractSubMenu {
                           alt.Vehicle.all.forEach((vehicle) =>
                               this.draw3DText(
                                   `SCRIPTID ${vehicle.scriptID}` +
-                                      //   ` - ID ${vehicle.id}` +
-                                      //   ` - TYPE ${vehicle.type}` +
+                                      ` - ID ${vehicle.id}` +
+                                      ` - TYPE ${vehicle.type}` +
                                       ` - MODEL ${vehicle.model}` +
                                       ` - SEATS ${native.getVehicleModelNumberOfSeats(vehicle.model)}` +
-                                      //   ` - BODY ${game.getVehicleBodyHealth(vehicle.scriptID)}` +
-                                      //   ` - ENGINE ${game.getVehicleEngineHealth(vehicle.scriptID)}` +
+                                      ` - BODY ${native.getVehicleBodyHealth(vehicle.scriptID)}` +
+                                      ` - ENGINE ${native.getVehicleEngineHealth(vehicle.scriptID)}` +
                                       ` - PETROL TANK ${native.getVehiclePetrolTankHealth(vehicle.scriptID)}`,
                                   vehicle
                               )

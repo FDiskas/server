@@ -19,20 +19,20 @@ import './vehicle/enter';
 import { Key } from './enums/keys';
 import { Action } from './enums/actions';
 
-alt.on('keyup', async (key) => {
-    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
-    if (key == 'B'.charCodeAt(0)) {
-        const closest = native.getClosestVehicle(
-            alt.Player.local.pos.x,
-            alt.Player.local.pos.y,
-            alt.Player.local.pos.z,
-            50,
-            0,
-            70
-        );
-        native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 2, 1.0, 2, 0);
-    }
-});
+// alt.on('keyup', async (key) => {
+//     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
+//     if (key == 'B'.charCodeAt(0)) {
+//         const closest = native.getClosestVehicle(
+//             alt.Player.local.pos.x,
+//             alt.Player.local.pos.y,
+//             alt.Player.local.pos.z,
+//             50,
+//             0,
+//             70
+//         );
+//         native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 2, 1.0, 2, 0);
+//     }
+// });
 
 alt.on('consoleCommand', async (cmd, ...args) => {
     if (cmd == 'bus') {
@@ -138,13 +138,13 @@ alt.on('consoleCommand', async (cmd, ...args) => {
     }
 });
 
-alt.on('keyup', async (key) => {
-    if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
-    if (key == Key.B) {
-        // alt.emitServer('test');
-        alt.emit('PlacingModule:setObject', 'bus');
-    }
-});
+// alt.on('keyup', async (key) => {
+//     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
+//     if (key == Key.B) {
+//         // alt.emitServer('test');
+//         alt.emit('PlacingModule:setObject', 'bus');
+//     }
+// });
 
 /**
 export function serverEvent<Event extends keyof alt.IServerEvent>(event?: Event | string) {

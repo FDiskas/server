@@ -1,10 +1,11 @@
+// https://keycode.info/
 export const enum Key {
     M = 77,
     F7 = 118,
     Esc = 27,
     B = 66,
     E = 69,
-    F,
+    C = 67,
 }
 
 export const enum NativeKey {

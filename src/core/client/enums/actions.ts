@@ -12,4 +12,8 @@ export const enum Action {
     PlayerPlayAnim = 'Player:Play:Animation',
     PlayerClearAnim = 'Player:Clear:Animation',
     PlayerPlaySound = 'Player:Play:Sound',
+    PlayerToggleCarDoor = 'Player:Toggle:Vehicle:Door',
+    PlayerOpenCarDoor = 'Player:Open:Vehicle:Door',
+    PlayerCloseCarDoor = 'Player:Close:Vehicle:Door',
+    // PlayerWhistleTaxi =
 }
