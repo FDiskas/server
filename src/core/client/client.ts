@@ -16,7 +16,6 @@ import './vehicle/enter';
 ///// ADMIN
 // import './vehicle/tags';
 
-import { Key } from './enums/keys';
 import { Action } from './enums/actions';
 
 // alt.on('keyup', async (key) => {
@@ -124,14 +123,14 @@ alt.on('consoleCommand', async (cmd, ...args) => {
         native.setEntityInvincible(ped, false);
         native.setPedSeeingRange(ped, 50);
 
-        const whistle = alt.setInterval(() => {
-            alt.emitServer(Action.PlayerWhistle, native.getPedBoneCoords(ped, 0x796e, 0, 0, 0), ped);
-        }, 5000);
+        // const whistle = alt.setInterval(() => {
+        //     alt.emitServer(Action.PlayerWhistle, native.getPedBoneCoords(ped, 0x796e, 0, 0, 0), ped);
+        // }, 5000);
 
         alt.on('resourceStop', () => {
-            if (whistle) {
-                alt.clearInterval(whistle);
-            }
+            // if (whistle) {
+            //     alt.clearInterval(whistle);
+            // }
             alt.log('Resouce core stopped');
             native.deletePed(ped);
         });

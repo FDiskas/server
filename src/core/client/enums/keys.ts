@@ -32,7 +32,8 @@ export const enum NativeKey {
     InputMultiplayerInfo = 20, // Z
     InputSprint = 21, // LEFT SHIFT
     InputJump = 22, // SPACEBAR
-    InputEnter = 23, // F
+    /** F */
+    InputEnter = 23,
     InputAttack = 24, // LEFT MOUSE BUTTON
     InputAim = 25, // RIGHT MOUSE BUTTON
     InputLookBehind = 26, // C

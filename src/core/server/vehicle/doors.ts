@@ -14,19 +14,26 @@ alt.onClient(Action.PlayerToggleCarWindow, (player: alt.Player, windowIndex) => 
     }
 });
 
-alt.onClient(Action.PlayerToggleCarDoor, (player: alt.Player, veh: alt.Vehicle['id'], doorIndex) => {
+alt.onClient(Action.PlayerToggleCarDoor, (player: alt.Player, veh: alt.Vehicle['id'], index) => {
+    const doorIndex = {
+        '-1': 0,
+        0: 1,
+        1: 2,
+        2: 3,
+        3: 4,
+        4: 4,
+        5: 5,
+    };
     const vehicle = alt.Vehicle.getByID(veh);
-    const doorState = vehicle.getDoorState(doorIndex + 1);
+    const doorState = vehicle.getDoorState(doorIndex[index]);
 
-    if (doorState === alt.VehicleDoorState.Unknown) {
-        return;
-    }
-    if (doorState === alt.VehicleDoorState.Closed) {
-        vehicle.setDoorState(doorIndex + 1, alt.VehicleDoorState.OpenedLevel7);
-        alt.emitClient(player, Action.PlayerOpenCarDoor, vehicle, doorIndex);
-    } else {
-        // FIXME: https://github.com/altmp/altv-issues/issues/737
-        vehicle.setDoorState(doorIndex + 1, alt.VehicleDoorState.Closed);
-        alt.emitClient(player, Action.PlayerCloseCarDoor, vehicle, doorIndex);
-    }
+    // FIXME: https://github.com/altmp/altv-issues/issues/737
+    // if (doorState > 0) {
+    //     vehicle.setDoorState(doorIndex[index], alt.VehicleDoorState.Closed);
+    //     alt.emitClient(player, Action.PlayerCloseCarDoor, vehicle, index);
+    //     return;
+    // }
+
+    vehicle.setDoorState(doorIndex[index], alt.VehicleDoorState.OpenedLevel7);
+    alt.emitClient(player, Action.PlayerOpenCarDoor, vehicle, index);
 });

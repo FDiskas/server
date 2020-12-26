@@ -12,6 +12,7 @@ import { Game } from '../utils/game';
 import { AbstractMenu } from './abstractMenu';
 import { AbstractSubMenu } from './abstractSubMenu';
 import { UIMenuItem, UIMenuCheckboxItem, BadgeStyle } from '@durtyfree/altv-nativeui';
+import { VehicleBones } from '../enums/vehicleBones';
 
 export class MiscMenu extends AbstractSubMenu {
     customPropItem: UIMenuItem;
@@ -102,7 +103,7 @@ export class MiscMenu extends AbstractSubMenu {
                                       ` - BODY ${native.getVehicleBodyHealth(vehicle.scriptID)}` +
                                       ` - ENGINE ${native.getVehicleEngineHealth(vehicle.scriptID)}` +
                                       ` - PETROL TANK ${native.getVehiclePetrolTankHealth(vehicle.scriptID)}`,
-                                  vehicle
+                                  vehicle.pos
                               )
                           );
                           alt.Player.all.forEach((player) =>
@@ -112,7 +113,7 @@ export class MiscMenu extends AbstractSubMenu {
                                       ` - MODEL ${player.model}` +
                                       ` - HEALTH ${native.getEntityHealth(player.scriptID)}` +
                                       ` - ARMOR ${native.getPedArmour(player.scriptID)}`,
-                                  player
+                                  player.pos
                               )
                           );
                       },
@@ -120,27 +121,45 @@ export class MiscMenu extends AbstractSubMenu {
                   )
                 : tick.clear('misc:drawEntityInfo')
         );
+        this.addItem((this.entitiesInfoItem = new UIMenuCheckboxItem('Show Vehicle Bones')), (state?: boolean) =>
+            state ? tick.register('misc:draVehicleBones', this.renderNameTags, 0) : tick.clear('misc:draVehicleBones')
+        );
         this.addItem((this.raycastInfoItem = new UIMenuCheckboxItem('Show Raycast Info')), (state?: boolean) =>
             state
                 ? tick.register(
                       'misc:drawRaycastInfo',
                       () => {
+                          let entityText;
                           let entity = alt.Entity.getByScriptID(
                               native.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1]
                           );
-                          if (!entity) return;
-                          let entityText =
+                          if (!entity) {
+                              const object = native.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1];
+                              const objectCoords = native.getEntityCoords(object, false);
+                              entityText =
+                                  ` ~y~ENTITY ${object}` +
+                                  ` - POS (${objectCoords.x.toFixed(3)}, ${objectCoords.y.toFixed(
+                                      3
+                                  )}, ${objectCoords.z.toFixed(3)})` +
+                                  ` - DISTANCE ${Game.getDistanceBetweenCoords(
+                                      alt.Player.local.pos,
+                                      objectCoords
+                                  ).toFixed(3)}`;
+                              this.draw3DText(entityText, objectCoords);
+                              return;
+                          }
+                          entityText =
                               `~y~SCRIPTID ${entity.scriptID}` +
                               ` - ID ${entity.id}` +
                               ` - TYPE ${entity.type}` +
-                              ` - POS (${entity.pos.x.toFixed(3)}` +
-                              ` - ${entity.pos.y.toFixed(3)}` +
-                              ` - ${entity.pos.z.toFixed(3)})` +
+                              ` - POS (${entity.pos.x.toFixed(3)}, ${entity.pos.y.toFixed(3)}, ${entity.pos.z.toFixed(
+                                  3
+                              )})` +
                               ` - ${native.isEntityDead(entity.scriptID, false) ? 'DEAD' : 'ALIVE'}` +
                               ` - DISTANCE ${Game.getDistanceBetweenCoords(alt.Player.local.pos, entity.pos).toFixed(
                                   3
                               )}`;
-                          if (entity instanceof alt.Vehicle)
+                          if (entity instanceof alt.Vehicle) {
                               entityText = entityText.concat(
                                   ` - ${
                                       native.getVehicleDoorsLockedForPlayer(entity.scriptID, alt.Player.local.scriptID)
@@ -148,7 +167,8 @@ export class MiscMenu extends AbstractSubMenu {
                                           : 'UNLOCKED'
                                   }`
                               );
-                          this.draw3DText(entityText, entity);
+                          }
+                          this.draw3DText(entityText, entity.pos);
                       },
                       0
                   )
@@ -179,7 +199,7 @@ export class MiscMenu extends AbstractSubMenu {
         });
     }
 
-    private draw3DText(text: string, entity: alt.Entity) {
+    private draw3DText(text: string, entity: alt.IVector3) {
         new Text3D(
             text,
             undefined,
@@ -188,5 +208,51 @@ export class MiscMenu extends AbstractSubMenu {
             new alt.RGBA(255, 255, 255, 220),
             entity
         ).drawThisFrame();
+    }
+
+    private renderNameTags() {
+        const vehicle = native.getClosestVehicle(
+            alt.Player.local.pos.x,
+            alt.Player.local.pos.y,
+            alt.Player.local.pos.z,
+            10,
+            0,
+            70
+        );
+        if (vehicle) {
+            for (const bone in VehicleBones) {
+                const objectBone = native.getEntityBoneIndexByName(vehicle, bone);
+                if (objectBone !== -1) {
+                    const seatPos = native.getWorldPositionOfEntityBone(vehicle, objectBone);
+                    // alt.log(JSON.stringify({ seatBone, seatPos }));
+
+                    const camCoords = native.getGameplayCamCoord();
+                    let scale =
+                        (1 /
+                            native.getDistanceBetweenCoords(
+                                camCoords.x,
+                                camCoords.y,
+                                camCoords.z,
+                                seatPos.x,
+                                seatPos.y,
+                                seatPos.z,
+                                true
+                            )) *
+                        20 *
+                        ((1 / native.getGameplayCamFov()) * 100);
+                    native.setTextScale(0, 0.04 * scale);
+                    native.setDrawOrigin(seatPos.x, seatPos.y, seatPos.z, false);
+                    native.beginTextCommandDisplayText('STRING');
+                    native.setTextFont(4);
+                    native.setTextOutline();
+                    native.setTextCentre(true);
+                    native.setTextProportional(true);
+                    native.setTextColour(255, 255, 255, 255);
+                    native.addTextComponentSubstringPlayerName(`${bone}`);
+                    native.endTextCommandDisplayText(0, 0, 0);
+                    native.clearDrawOrigin();
+                }
+            }
+        }
     }
 }

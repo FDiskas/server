@@ -28,13 +28,12 @@ alt.on('keydown', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key === Key.E) {
         // Car window
-        if (native.isPed alt.Player.local)
         if (alt.Player.local.vehicle) {
             alt.emit(Action.PlayerToggleCarWindow);
             return;
         }
 
-        if (getClosestVehicle(alt.Player.local, 5).vehicle?.scriptID) {
+        if (getClosestVehicle(alt.Player.local, 6).vehicle?.scriptID) {
             alt.emit(Action.PlayerToggleCarDoor);
             return;
         }
@@ -46,7 +45,7 @@ alt.on('keydown', (key) => {
 alt.on('keyup', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     if (key === Key.E) {
-        if (!getClosestVehicle(alt.Player.local, 5).vehicle?.scriptID) {
+        if (!getClosestVehicle(alt.Player.local, 6).vehicle?.scriptID) {
             alt.emit(Action.PlayerClearAnim);
         }
     }

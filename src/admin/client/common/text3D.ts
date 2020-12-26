@@ -5,16 +5,16 @@ import { Game } from '../utils/game';
 import { AbstractText } from './abstractText';
 
 export class Text3D extends AbstractText {
-    position: alt.Vector3;
-    attachedTo: alt.Entity;
+    position: alt.IVector3;
+    attachedTo: alt.IVector3;
 
     constructor(
         text: string,
-        position: alt.Vector3,
+        position: alt.IVector3,
         scale: number,
         font: Font,
         color: alt.RGBA,
-        attachedTo: alt.Entity
+        attachedTo: alt.IVector3
     ) {
         super(text, scale, font, color);
         this.position = position;
@@ -22,7 +22,7 @@ export class Text3D extends AbstractText {
     }
 
     drawThisFrame() {
-        if (this.attachedTo) this.position = this.attachedTo.pos;
+        if (this.attachedTo) this.position = this.attachedTo;
         let scale =
             (1 / Game.getDistanceBetweenCoords(game.getGameplayCamCoord() as alt.Vector3, this.position)) *
             20 *

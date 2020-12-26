@@ -68,7 +68,7 @@ export class Game {
         return game.isModelInCdimage(hash) || game.isModelValid(hash) || game.isWeaponValid(hash) ? true : false;
     }
 
-    static getDistanceBetweenCoords(from: alt.Vector3, to: alt.Vector3) {
+    static getDistanceBetweenCoords(from: alt.IVector3, to: alt.IVector3) {
         return game.getDistanceBetweenCoords(from.x, from.y, from.z, to.x, to.y, to.z, true);
     }
 
