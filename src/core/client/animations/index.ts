@@ -5,6 +5,7 @@ import { loadAnim } from '../lib/async';
 
 import './drunk';
 import './taxi';
+import './deathCam';
 
 /*
 	Flags need to be added together for desired effects.
