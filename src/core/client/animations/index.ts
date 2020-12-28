@@ -29,6 +29,7 @@ alt.on(Action.PlayerPlayAnim, (data) => {
 
 alt.on(Action.PlayerClearAnim, () => {
     native.clearPedTasks(alt.Player.local.scriptID);
+    native.clearPedTasksImmediately(alt.Player.local.scriptID);
     if (!alt.Player.local.vehicle) {
         native.clearPedSecondaryTask(alt.Player.local.scriptID);
     }

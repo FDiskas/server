@@ -39,8 +39,6 @@ alt.on(Action.PlayerEnterVehicle, () => {
         (seatName) => native.getEntityBoneIndexByName(vehicle.scriptID, seatName) !== -1
     );
 
-    alt.log(availableBones.join(', '));
-
     availableBones.forEach((handle) => {
         const doorBone = native.getEntityBoneIndexByName(vehicle.scriptID, handle);
         const doorPos = native.getWorldPositionOfEntityBone(vehicle.scriptID, doorBone);
@@ -58,9 +56,6 @@ alt.on(Action.PlayerEnterVehicle, () => {
     }
 
     native.taskEnterVehicle(alt.Player.local.scriptID, vehicle.scriptID, 10000, seatList[closestDoor], 1.0, 0, 0);
-    alt.log(
-        `native.taskEnterVehicle(${alt.Player.local.scriptID}, ${vehicle.scriptID}, 10000, ${seatList[closestDoor]}, 1.0, 0, 0)`
-    );
     sitting = true;
 
     if (sitting && native.getVehicleDoorLockStatus(vehicle.scriptID) == 4) {

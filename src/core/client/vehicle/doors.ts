@@ -64,18 +64,22 @@ alt.on(Action.PlayerToggleCarDoor, () => {
         handle_dside_f: -1,
         window_lf: -1,
         seat_dside_f: -1,
+        door_dside_f: -1,
 
         handle_pside_f: 0,
         seat_pside_f: 0,
         window_rf: 0,
+        door_pside_f: 0,
 
         handle_pside_r: 1,
         window_rr: 1,
         seat_pside_r: 1,
+        door_pside_r: 1,
 
         handle_dside_r: 2,
-        eat_dside_r: 2,
+        seat_dside_r: 2,
         window_lr: 2,
+        door_dside_r: 2,
 
         boot: 5,
         windscreen_r: 5,
@@ -85,7 +89,7 @@ alt.on(Action.PlayerToggleCarDoor, () => {
         bonnet: 4,
     };
     const plyPos = alt.Player.local.pos;
-    const vehicle = getClosestVehicle(alt.Player.local, 6).vehicle;
+    const vehicle = getClosestVehicle(alt.Player.local, 10).vehicle;
     let closestDoor;
     let closestDist = 1000;
     let availableBones = Object.keys(doorList).filter(
@@ -114,12 +118,9 @@ alt.onServer(Action.PlayerCloseCarWindow, (windowIndex) => {
     native.rollUpWindow(alt.Player.local.vehicle.scriptID, windowIndex);
 });
 alt.onServer(Action.PlayerOpenCarDoor, (vehicle: alt.Vehicle, doorIndex) => {
-    alt.log(`Open door:${doorIndex}`);
     if (doorIndex >= 4) {
         native.setVehicleDoorOpen(vehicle.scriptID, doorIndex, true, true);
     } else {
-        alt.log(doorIndex);
-
         native.taskOpenVehicleDoor(alt.Player.local.scriptID, vehicle.scriptID, 10000, doorIndex, 1.0);
     }
 });
