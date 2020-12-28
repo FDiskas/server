@@ -1,4 +1,5 @@
 import alt from 'alt-client';
+import native from 'natives';
 
 let loaded = false;
 let opened = false;

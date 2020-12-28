@@ -15,5 +15,6 @@ export const enum Action {
     PlayerToggleCarDoor = 'Player:Toggle:Vehicle:Door',
     PlayerOpenCarDoor = 'Player:Open:Vehicle:Door',
     PlayerCloseCarDoor = 'Player:Close:Vehicle:Door',
-    // PlayerWhistleTaxi =
+    PlayerUnstuck = 'PlayerHelp:Unstuck',
+    PlayerPlayOpenMap = 'Player:Play:OpenMap',
 }

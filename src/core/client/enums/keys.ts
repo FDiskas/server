@@ -6,6 +6,8 @@ export const enum Key {
     B = 66,
     E = 69,
     C = 67,
+    Crl = 17,
+    P = 80,
 }
 
 export const enum NativeKey {

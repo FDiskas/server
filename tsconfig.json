@@ -25,9 +25,6 @@
     },
     "include": [
         "./src/**/*.ts",
-        "src/ped-decorator/html/attachments.js",
-        "src/ped-decorator/server.js",
-        "src/ped-decorator/client.js"
     ],
     "exclude": [
         "node_modules",

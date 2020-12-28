@@ -3,39 +3,35 @@ import native from 'natives';
 import './nametags';
 import './handling/handsUp';
 import './handling/crouch';
+import './handling/openMap';
 import './animations';
 import './sounds';
 import './core/keyBindings';
 // import './intro/newjoiners';
-// import './object/placement';
 // import './weather/weather';
 import './AI/takeFromAirport';
 import './vehicle/doors';
 import './vehicle/enter';
+import './core/notifications';
 
 ///// ADMIN
 // import './vehicle/tags';
 
 import { Action } from './enums/actions';
+import { notificationMessage, NotificationType } from './core/notifications';
 
-// alt.on('keyup', async (key) => {
-//     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
-//     if (key == 'B'.charCodeAt(0)) {
-//         const closest = native.getClosestVehicle(
-//             alt.Player.local.pos.x,
-//             alt.Player.local.pos.y,
-//             alt.Player.local.pos.z,
-//             50,
-//             0,
-//             70
-//         );
-//         native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 2, 1.0, 2, 0);
-//     }
-// });
+const disableIdleCamera = alt.setInterval(() => {
+    native.invalidateIdleCam();
+    native._0x9E4CFFF989258472(); // Disable vehicle idle camera
+}, 19000);
+
+alt.on('resourceStop', () => {
+    if (disableIdleCamera) {
+        alt.clearEveryTick(disableIdleCamera);
+    }
+});
 
 alt.on('consoleCommand', async (cmd, ...args) => {
-    if (cmd == 'bus') {
-    }
     if (cmd == 'drunk') {
         alt.emit(Action.PlayerGetDrunk);
     }
@@ -136,14 +132,6 @@ alt.on('consoleCommand', async (cmd, ...args) => {
         });
     }
 });
-
-// alt.on('keyup', async (key) => {
-//     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
-//     if (key == Key.B) {
-//         // alt.emitServer('test');
-//         alt.emit('PlacingModule:setObject', 'bus');
-//     }
-// });
 
 /**
 export function serverEvent<Event extends keyof alt.IServerEvent>(event?: Event | string) {

@@ -10,7 +10,7 @@
         "clean": "rimraf resources",
         "update": "altv-pkg d rc",
         "format": "prettier --loglevel warn --write \"**/*.{ts,md}\"",
-        "postinstall": "patch-package"
+        "postinstall": "patch-package && npm run update"
     },
     "license": "MIT",
     "devDependencies": {
