@@ -134,10 +134,12 @@ export class MiscMenu extends AbstractSubMenu {
                               native.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1]
                           );
                           if (!entity) {
-                              const object = native.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1];
-                              const objectCoords = native.getEntityCoords(object, false);
+                              const entity = native.getEntityPlayerIsFreeAimingAt(alt.Player.local.scriptID, 0)[1];
+                              const model = native.getEntityModel(entity);
+                              const objectCoords = native.getEntityCoords(entity, false);
                               entityText =
-                                  ` ~y~ENTITY ${object}` +
+                                  ` ~y~ENTITY ${entity}` +
+                                  ` MODEL: ${model}` +
                                   ` - POS (${objectCoords.x.toFixed(3)}, ${objectCoords.y.toFixed(
                                       3
                                   )}, ${objectCoords.z.toFixed(3)})` +

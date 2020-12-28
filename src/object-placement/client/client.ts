@@ -14,8 +14,8 @@ alt.on('PlacingModule:setObject', (object) => {
 });
 
 function showAlphaObject(object) {
-    requestModelPromise(native.getHashKey(object)).then((succ) => {
-        if (succ) {
+    requestModelPromise(native.getHashKey(object)).then((suck) => {
+        if (suck) {
             newObjectToPlace = native.createObjectNoOffset(
                 native.getHashKey(object),
                 player.pos.x,
@@ -99,6 +99,9 @@ alt.everyTick(() => {
 
 alt.on('keyup', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
+    if (key === 'B'.charCodeAt(0)) {
+        alt.emit('PlacingModule:setObject', 'bus');
+    }
     //SPACE to abort it
     if (key === 0x20) {
         alt.log('PlacingModule: Object deleted');
@@ -110,8 +113,8 @@ alt.on('keyup', (key) => {
     //E to place the item
     if (key === 0x45) {
         if (showObject) {
-            alt.log('PlacingModule: Object placed');
-            alt.log('Coords: ' + JSON.stringify(native.getEntityCoords(newObjectToPlace, true)));
+            alt.log('~g~Coords: ' + JSON.stringify(native.getEntityCoords(newObjectToPlace, true)));
+            alt.log('~g~Rotation: ' + JSON.stringify(native.getEntityRotation(newObjectToPlace, 2)));
             native.placeObjectOnGroundProperly(newObjectToPlace);
             native.freezeEntityPosition(newObjectToPlace, true);
             native.setModelAsNoLongerNeeded(newObjectToPlace);

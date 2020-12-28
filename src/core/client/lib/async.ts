@@ -51,7 +51,7 @@ export const loadModelAsync = (model: string | number) => {
     });
 };
 
-export async function loadAnim(dict) {
+export const loadAnim = async (dict: string) => {
     const maxCountLoadTry = 255;
     return new Promise((resolve, reject) => {
         native.requestAnimDict(dict);
@@ -73,4 +73,4 @@ export async function loadAnim(dict) {
             count += 1;
         }, 5);
     });
-}
+};
