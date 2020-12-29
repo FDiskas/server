@@ -2,6 +2,7 @@ import * as alt from 'alt-server';
 
 import './vehicle/doors';
 import './animations/taxi';
+// import './AI/medics';
 
 import { Action } from '../client/enums/actions';
 import { PedHash } from '../client/enums/pedHash';

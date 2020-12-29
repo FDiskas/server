@@ -18,4 +18,6 @@ export const enum Action {
     PlayerUnstuck = 'PlayerHelp:Unstuck',
     PlayerPlayOpenMap = 'Player:Play:OpenMap',
     PlayerPlayDeathCam = 'Player:Play:Death:Cam',
+    PedParamedicGetToCar = 'Ped:Paramedic:Get:To:Car',
+    PedParamedicTakeToHospital = 'Ped:Paramedic:Take:To:Hospital',
 }

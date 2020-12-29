@@ -1,6 +1,7 @@
 import * as alt from 'alt-client';
 import * as native from 'natives';
 import { Action } from '../enums/actions';
+import { notificationMessage, NotificationType } from '../core/notifications';
 
 let camera;
 let endCam;
@@ -35,6 +36,7 @@ alt.on('camera:SetupSky', (pos) => {
 });
 
 alt.on('camera:FinishSky', () => {
+    notificationMessage('You died', false, NotificationType.error);
     camTimer = alt.setTimeout(() => {
         native.freezeEntityPosition(alt.Player.local.scriptID, true);
         const pos = alt.Player.local.pos;

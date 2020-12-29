@@ -7,18 +7,15 @@ import './handling/openMap';
 import './animations';
 import './sounds';
 import './core/keyBindings';
-// import './intro/newjoiners';
-// import './weather/weather';
+import './intro/newjoiners';
+import './weather/weather';
 import './AI/takeFromAirport';
+import './AI/medics';
 import './vehicle/doors';
 import './vehicle/enter';
 import './core/notifications';
 
-///// ADMIN
-// import './vehicle/tags';
-
 import { Action } from './enums/actions';
-import { notificationMessage, NotificationType } from './core/notifications';
 
 const disableIdleCamera = alt.setInterval(() => {
     native.invalidateIdleCam();
