@@ -56,13 +56,13 @@ alt.on(Action.PlayerEnterVehicle, () => {
     }
 
     alt.log(
-        `native.taskEnterVehicle(${alt.Player.local.scriptID}, ${vehicle.scriptID}, 10000, ${seatList[closestDoor]}, 1.0, 0, 0)`
+        `native.taskEnterVehicle(${alt.Player.local.scriptID}, ${vehicle.scriptID}, 10000, ${seatList[closestDoor]}, 1.0, 1, 0)`
     );
     //35 - _PED_FLAG_PUT_ON_MOTORCYCLE_HELMET
     //184 - _PED_FLAG_DISABLE_SHUFFLING_TO_DRIVER_SEAT
     //429 - _PED_FLAG_DISABLE_STARTING_VEH_ENGINE
     native.setPedConfigFlag(alt.Player.local.scriptID, 184, true);
-    native.taskEnterVehicle(alt.Player.local.scriptID, vehicle.scriptID, 10000, seatList[closestDoor], 1.0, 0, 0);
+    native.taskEnterVehicle(alt.Player.local.scriptID, vehicle.scriptID, 10000, seatList[closestDoor], 1.0, 1, 0);
     sitting = true;
 
     if (sitting && native.getVehicleDoorLockStatus(vehicle.scriptID) == 4) {
