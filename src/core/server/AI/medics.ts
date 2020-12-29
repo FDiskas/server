@@ -3,11 +3,14 @@ import { Action } from '../../client/enums/actions';
 import { VehicleHash } from '../../client/enums/vehicleHash';
 
 alt.onClient('prepareMedic', (player, ambulanceCoords: alt.IVector3, paramedicCoords: alt.IVector3) => {
+    // Check if Z index is high then take a helicopter
+
     const vehicle = new alt.Vehicle(
-        VehicleHash.Ambulance,
+        // player.pos.z - ambulanceCoords.z >= 10 ? VehicleHash.Swift : VehicleHash.Ambulance,
+        VehicleHash.Swift,
         ambulanceCoords.x,
         ambulanceCoords.y,
-        ambulanceCoords.z,
+        player.pos.z + 100,
         0,
         0,
         paramedicCoords.z
@@ -18,7 +21,7 @@ alt.onClient('prepareMedic', (player, ambulanceCoords: alt.IVector3, paramedicCo
 
     alt.setTimeout(() => {
         alt.emitClient(player, Action.PedParamedicGetToCar, vehicle, paramedicCoords);
-    }, 5000);
+    }, 1000);
 });
 alt.on('playerDeath', (victim: alt.Player, killer: alt.Entity, weaponHash: number) => {
     // get closest road

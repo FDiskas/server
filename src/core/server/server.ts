@@ -2,6 +2,7 @@ import * as alt from 'alt-server';
 
 import './vehicle/doors';
 import './animations/taxi';
+// import './animations/deathCam';
 // import './AI/medics';
 
 import { Action } from '../client/enums/actions';

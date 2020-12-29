@@ -56,25 +56,57 @@ alt.onServer(Action.PedParamedicGetToCar, async (vehicle: alt.Vehicle, pedCoords
     // Create Bus driver
     let pedDriver = null;
 
-    loadModelAsync(driverStart.model).then(() => {
-        pedDriver = native.createPed(
-            1,
-            driverStart.model,
-            driverStart.x,
-            driverStart.y,
-            driverStart.z,
-            driverStart.heading,
-            false,
-            false
+    await loadModelAsync(driverStart.model);
+    // pedDriver = native.createPed(
+    //     1,
+    //     driverStart.model,
+    //     driverStart.x,
+    //     driverStart.y,
+    //     driverStart.z,
+    //     driverStart.heading,
+    //     false,
+    //     false
+    // );
+    pedDriver = native.createPedInsideVehicle(vehicle.scriptID, 20, driverStart.model, -1, false, false);
+    alt.log(`native.createPedInsideVehicle(${vehicle.scriptID}, 20, ${driverStart.model}, -1, true, true)`);
+
+    native.taskWanderStandard(pedDriver, 10.0, 10);
+    native.setPedIntoVehicle(alt.Player.local.scriptID, vehicle.scriptID, 0);
+    // alt.log(`PED Paramedic: ${pedDriver} get in to car: ${vehicle.scriptID}`);
+
+    // get ped model
+    // native.createPedInsideVehicle(vehicle.scriptID, 20, driverStart.model, -1, true, true);
+
+    // native.taskEnterVehicle(pedDriver, vehicle.scriptID, 1, -1, 16, 1, 0);
+
+    if (native.isThisModelAHeli(vehicle.model)) {
+        native.taskHeliMission(
+            pedDriver,
+            vehicle.scriptID,
+            0,
+            0,
+            driverDest.x,
+            driverDest.y,
+            driverDest.z,
+            32,
+            1.0,
+            -1.0,
+            -1.0,
+            10,
+            10,
+            5.0,
+            4096
         );
-        alt.on('resourceStop', () => {
-            native.deletePed(pedDriver);
-        });
+        native.setVehicleSearchlight(vehicle.scriptID, true, true);
 
-        native.taskWanderStandard(pedDriver, 10.0, 10);
-        alt.log(`PED Paramedic get in to car: ${vehicle.scriptID}`);
-        // native.taskEnterVehicle(pedDriver, vehicle.scriptID, 6000, -1, 2.0, 0, 0);
-
+        // native.taskHeliChase(
+        //     pedDriver,
+        //     alt.Player.local.scriptID,
+        //     alt.Player.local.pos.x,
+        //     alt.Player.local.pos.y,
+        //     alt.Player.local.pos.z
+        // );
+    } else {
         native.taskVehicleDriveToCoordLongrange(
             pedDriver,
             vehicle.scriptID,
@@ -86,32 +118,7 @@ alt.onServer(Action.PedParamedicGetToCar, async (vehicle: alt.Vehicle, pedCoords
             10.0
         );
         native.setVehicleSiren(vehicle.scriptID, true);
-    });
-
-    alt.on('enteredVehicle', (vehicle, seat) => {
-        alt.emit(Action.PedParamedicTakeToHospital, pedDriver, vehicle);
-    });
-
-    alt.on(Action.PedParamedicTakeToHospital, (driver, bus: alt.Vehicle) => {
-        timerToGarage = alt.setTimeout(() => {
-            alt.log('Take to Hospital');
-            native.taskVehicleDriveToCoordLongrange(
-                driver,
-                bus.scriptID,
-                garage.x,
-                garage.y,
-                garage.z,
-                220.0,
-                DrivingStyle.crazy,
-                5.0
-            );
-
-            alt.setTimeout(() => {
-                native.deletePed(pedDriver);
-                alt.emitServer(Action.PedParamedicTakeToHospital, bus);
-            }, 45000);
-        }, 15000);
-    });
+    }
 
     // const busDriverTag = alt.everyTick(() => {
     //     distance(pedDriver.pos, alt.Player.local.pos) < 50) {
@@ -119,3 +126,37 @@ alt.onServer(Action.PedParamedicGetToCar, async (vehicle: alt.Vehicle, pedCoords
     //     }
     // });
 });
+// alt.on('resourceStop', () => {
+//     native.deletePed(pedDriver);
+//     vehicle.destroy();
+// });
+// alt.on('enteredVehicle', (vehicle, seat) => {
+//     alt.emit(Action.PedParamedicTakeToHospital, pedDriver, vehicle);
+// });
+
+// alt.on(Action.PedParamedicTakeToHospital, (driver, bus: alt.Vehicle) => {
+//     const timerToGarage = alt.setTimeout(() => {
+//         alt.log('Take to Hospital');
+
+//         // When arrive taskLeaveVehicle
+
+//         // If heli then fly
+//         // isThisModelAHeli
+
+//         native.taskVehicleDriveToCoordLongrange(
+//             driver,
+//             bus.scriptID,
+//             garage.x,
+//             garage.y,
+//             garage.z,
+//             220.0,
+//             DrivingStyle.crazy,
+//             5.0
+//         );
+
+//         alt.setTimeout(() => {
+//             native.deletePed(pedDriver);
+//             alt.emitServer(Action.PedParamedicTakeToHospital, bus);
+//         }, 45000);
+//     }, 15000);
+// });

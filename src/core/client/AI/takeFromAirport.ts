@@ -58,7 +58,8 @@ alt.onServer(Action.TakeBusFromAirport, async (vehicle: alt.Vehicle) => {
         }
 
         native.taskWanderStandard(pedDriver, 10.0, 10);
-        native.taskEnterVehicle(pedDriver, vehicle.scriptID, 60000, -1, 1.0, 0, 0);
+        // FIXME: native.taskEnterVehicle(pedDriver, vehicle.scriptID, 60000, -1, 1.0, 1, 0);
+        native.setPedIntoVehicle(pedDriver, vehicle.scriptID, -1);
     });
 
     alt.on('enteredVehicle', (vehicle, seat) => {

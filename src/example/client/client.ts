@@ -12,6 +12,6 @@ alt.on('keyup', async (key) => {
             0,
             70
         );
-        native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 1, 1.0, 2, 0);
+        native.taskEnterVehicle(alt.Player.local.scriptID, closest, 5000, 1, 1.0, 1, 0);
     }
 });

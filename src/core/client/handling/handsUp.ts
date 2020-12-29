@@ -8,6 +8,7 @@ var status = false;
 var dict = 'missminuteman_1ig_2';
 native.requestAnimDict(dict);
 
+// TODO: check native.taskHandsUp
 alt.on('keydown', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) return;
     // X Key pressed
