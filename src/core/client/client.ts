@@ -14,6 +14,7 @@ import './AI/takeFromAirport';
 import './vehicle/doors';
 import './vehicle/enter';
 import './core/notifications';
+import './handling/openDoor';
 
 import { Action } from './enums/actions';
 
