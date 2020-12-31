@@ -1,13 +1,16 @@
 <p align="center" style="font-size: 26px">
-	<b>Typescript Boilerplate for alt:V</b>
+	<b>GTA V Role Play playground for alt:V server</b>
 </p>
 <p align="center" style="font-size: 26px">
-	[ <a href="https://altv.mp">altv.mp</a> | <a href="https://stuyk.com/">stuyk.com</a> ]
+	[ <a href="https://altv.mp">altv.mp</a> | <a href="https://stuyk.com/">Thanks Stuyk</a> ]
 </p>
 
-[❤️ Become a Sponsor of my Open Source Work](https://github.com/sponsors/Stuyk/)
+## Documentation links
 
-[⌨️ Learn how to script for alt:V](https://stuyk.github.io/altv-javascript-guide/)
+-   [ALT Client Docs](https://docs.altv.mp/js/api/alt-client.html)
+-   [ALT Server Docs](https://docs.altv.mp/js/api/alt-server.html)
+-   [Native Docs](https://natives.altv.mp/)
+-   [Unofficial alt:V Docs](https://stuyk.github.io/altv-javascript-guide/)
 
 ⭐ This repository if you found it useful!
 
@@ -21,7 +24,6 @@ alt:V has a lot of Boilerplates for TypeScript. However, they have one feature m
 -   Built in script auto-compilation through `npm run watch`.
 -   Built in auto-copy for non-typescript files.
 -   Built in handling of multiple resources for compilation.
--   Built in server restart after compilation.
 -   Easily expandable resource directory.
 -   [altv-pkg](https://github.com/Stuyk/altv-pkg) support for auto-downloading alt:V Server Binaries.
 -   Prettier Configuration for code formatting.
@@ -30,16 +32,9 @@ alt:V has a lot of Boilerplates for TypeScript. However, they have one feature m
 
 [Get NodeJS 13+](https://nodejs.org/en/download/current/)
 
-Clone the Repository
+Install the node modules
 
 ```sh
-git clone git@github.com:Stuyk/altv-typescript.git
-```
-
-Install the Repository
-
-```sh
-cd altv-typescript
 npm install
 ```
 
@@ -55,7 +50,7 @@ Build Typescript Files
 npm run build
 ```
 
-Start the Server
+### Start the Server
 
 Use any of the following commands to start it.
 
@@ -85,17 +80,21 @@ Run your server in another terminal:
 
 <br />
 
-**End Server Runtime**
+### End Server Runtime
 
 `ctrl + c` to kill your server.
 
+### Reload changed resources
+
+Directly on running server terminal type `reload RESOURCE_NAME` to reload module.
+
 ### src vs src-copy
 
-**src**
+### src
 
-This folder should be used to write your typescript based gamemodes.
+This folder should be used to write your typescript based game modes.
 
-**src-copy**
+### src-copy
 
 This folder should be used to copy car mods, mlos, etc. to your resources folder after compilation.
 

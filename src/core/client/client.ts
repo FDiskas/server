@@ -16,6 +16,7 @@ import './vehicle/enter';
 // import './vehicle/push';
 import './core/notifications';
 import './handling/openDoor';
+import './weather/weather';
 
 import { Action } from './enums/actions';
 
@@ -29,6 +30,9 @@ alt.on('resourceStop', () => {
         alt.clearEveryTick(disableIdleCamera);
     }
 });
+
+// Zoom out mini map
+native.setRadarZoomPrecise(93.5);
 
 alt.on('consoleCommand', async (cmd, ...args) => {
     if (cmd == 'drunk') {
@@ -128,6 +132,36 @@ alt.on('consoleCommand', async (cmd, ...args) => {
             // }
             alt.log('Resouce core stopped');
             native.deletePed(ped);
+        });
+    }
+    if (cmd == 'marker') {
+        alt.everyTick(() => {
+            native.drawMarker(
+                1,
+                alt.Player.local.pos.x,
+                alt.Player.local.pos.y,
+                alt.Player.local.pos.z + 2,
+                0,
+                0,
+                0,
+                0,
+                180,
+                0,
+                2,
+                2,
+                2,
+                255,
+                128,
+                0,
+                50,
+                false,
+                true,
+                1,
+                false,
+                0,
+                0,
+                false
+            );
         });
     }
 });

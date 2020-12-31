@@ -47,11 +47,9 @@ alt.on('playerConnect', (player: RPPlayer) => {
     }, 5000);
 
     alt.on('resourceStop', () => {
-        alt.log('Resource server stopped');
         try {
             vehicle.destroy();
         } catch (error) {
-            alt.log('Cant destroy bus');
             alt.logError(error);
         }
     });
