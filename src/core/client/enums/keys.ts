@@ -8,6 +8,10 @@ export const enum Key {
     C = 67,
     Crl = 17,
     P = 80,
+    UP = 38,
+    DOWN = 40,
+    F = 70,
+    G = 71,
 }
 
 export const enum NativeKey {

@@ -7,9 +7,9 @@ alt.on(Action.PlayerEnterVehicle, () => {
     let sitting = false;
 
     const seatList = {
-        seat_f: -1,
+        // seat_f: -1,
+        // seat_dside_f: -1,
         seat_r: 0,
-        seat_dside_f: -1,
         seat_pside_f: 0,
         seat_dside_r: 1,
         seat_pside_r: 2,

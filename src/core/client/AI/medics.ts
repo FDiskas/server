@@ -117,7 +117,7 @@ alt.onServer(Action.PedParamedicGetToCar, async (vehicle: alt.Vehicle, pedCoords
             DrivingStyle.crazy,
             10.0
         );
-        native.setVehicleSiren(vehicle.scriptID, true);
+        // native.setVehicleSiren(vehicle.scriptID, true);
     }
 
     // const busDriverTag = alt.everyTick(() => {

@@ -18,6 +18,7 @@ alt.onClient('prepareMedic', (player, ambulanceCoords: alt.IVector3, paramedicCo
     vehicle.dirtLevel = 0;
     vehicle.engineOn = true;
     vehicle.numberPlateText = 'help';
+    vehicle.sirenActive = true;
 
     alt.setTimeout(() => {
         alt.emitClient(player, Action.PedParamedicGetToCar, vehicle, paramedicCoords);

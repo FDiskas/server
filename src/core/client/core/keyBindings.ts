@@ -2,20 +2,12 @@ import * as alt from 'alt-client';
 import * as native from 'natives';
 import { FingerPoint } from '../handling/fingerPoint';
 import { Action } from '../enums/actions';
-import { Key, NativeKey } from '../enums/keys';
+import { Key } from '../enums/keys';
 import { getClosestVehicle } from '../lib/distance';
 
 // https://docs.fivem.net/docs/game-references/controls/
-alt.everyTick(() => {
-    native.disableControlAction(0, NativeKey.InputEnter, true);
-    if (native.isDisabledControlJustPressed(0, NativeKey.InputEnter)) {
-        if (alt.Player.local.vehicle) {
-            alt.emit(Action.PlayerExitVehicle);
-        } else {
-            alt.emit(Action.PlayerEnterVehicle);
-        }
-    }
-});
+
+let intervalEngine;
 
 alt.on('keydown', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) {
@@ -23,6 +15,27 @@ alt.on('keydown', (key) => {
             alt.emit(Action.PlayerClearAnim);
         }
         return;
+    }
+    if (key === Key.F) {
+        //429 - _PED_FLAG_DISABLE_STARTING_VEH_ENGINE
+        native.setPedConfigFlag(alt.Player.local.scriptID, 429, true);
+        if (
+            alt.Player.local.vehicle &&
+            native.getIsVehicleEngineRunning(alt.Player.local.vehicle.scriptID) &&
+            alt.Player.local.seat === 1
+        ) {
+            intervalEngine = alt.setInterval(() => {
+                if (!alt.Player.local.vehicle) {
+                    alt.clearInterval(intervalEngine);
+                    return;
+                }
+                native.setVehicleHandbrake(alt.Player.local.vehicle.scriptID, false);
+                native.setVehicleEngineOn(alt.Player.local.vehicle.scriptID, true, true, false);
+            }, 100);
+        }
+    }
+    if (key === Key.G) {
+        alt.emit(Action.PlayerEnterVehicle);
     }
     if (key == Key.B) {
         FingerPoint.start();
@@ -55,7 +68,22 @@ alt.on('keyup', (key) => {
             native.stopAnimPlayback(alt.Player.local.scriptID, 46, true);
         }
     }
+    if (key === Key.F && intervalEngine) {
+        alt.clearInterval(intervalEngine);
+    }
     if (key == Key.B) {
         FingerPoint.stop();
+    }
+    // Start the engine UP Arrow
+    if (key === Key.UP) {
+        if (alt.Player.local.vehicle) {
+            native.setVehicleEngineOn(alt.Player.local.vehicle.scriptID, true, false, true);
+        }
+    }
+    // Stop the engine DOWN Arrow
+    if (key === Key.DOWN) {
+        if (alt.Player.local.vehicle) {
+            native.setVehicleEngineOn(alt.Player.local.vehicle.scriptID, false, false, true);
+        }
     }
 });
