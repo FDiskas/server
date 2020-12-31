@@ -1,5 +1,7 @@
 import * as alt from 'alt-client';
 import native from 'natives';
+import { MarkerTypes } from '../../admin/client/enums/markerType';
+import { Font } from './enums/font';
 import { distance } from './lib/distance';
 
 const namedTags = alt.everyTick(renderNameTags);
@@ -25,7 +27,7 @@ function renderNameTags() {
                 native.setTextScale(0, 0.04 * scale);
                 native.setDrawOrigin(player.pos.x, player.pos.y, player.pos.z + 1, false);
                 native.beginTextCommandDisplayText('STRING');
-                native.setTextFont(4);
+                native.setTextFont(Font.ChaletComprimeCologne);
                 native.setTextOutline();
                 native.setTextCentre(true);
                 native.setTextProportional(true);

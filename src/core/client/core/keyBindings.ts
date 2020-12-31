@@ -11,7 +11,7 @@ let intervalEngine;
 
 alt.on('keydown', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) {
-        if (key === Key.Esc || key === Key.P) {
+        if (key === Key.Esc || key === Key.P || key === Key.BACKSPACE) {
             alt.emit(Action.PlayerClearAnim);
         }
         return;
