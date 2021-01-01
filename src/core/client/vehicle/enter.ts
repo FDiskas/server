@@ -55,9 +55,10 @@ alt.on(Action.PlayerEnterVehicle, () => {
         return;
     }
 
-    alt.log(
-        `native.taskEnterVehicle(${alt.Player.local.scriptID}, ${vehicle.scriptID}, 10000, ${seatList[closestDoor]}, 1.0, 1, 0)`
-    );
+    if (closestDist > 2) {
+        return;
+    }
+
     //35 - _PED_FLAG_PUT_ON_MOTORCYCLE_HELMET
     //184 - _PED_FLAG_DISABLE_SHUFFLING_TO_DRIVER_SEAT
     //429 - _PED_FLAG_DISABLE_STARTING_VEH_ENGINE

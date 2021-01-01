@@ -91,7 +91,7 @@ alt.on(Action.PlayerToggleCarDoor, () => {
     const plyPos = alt.Player.local.pos;
     const vehicle = getClosestVehicle(alt.Player.local, 10).vehicle;
     let closestDoor;
-    let closestDist = 1000;
+    let closestDist = 2;
     let availableBones = Object.keys(doorList).filter(
         (seatName) => native.getEntityBoneIndexByName(vehicle.scriptID, seatName) !== -1
     );
@@ -107,7 +107,9 @@ alt.on(Action.PlayerToggleCarDoor, () => {
             if (doorDist <= 0.1) return;
         }
     });
-    alt.emitServer(Action.PlayerToggleCarDoor, vehicle.id, doorList[closestDoor]);
+    if (closestDist <= 1.5) {
+        alt.emitServer(Action.PlayerToggleCarDoor, vehicle.id, doorList[closestDoor]);
+    }
 });
 
 // TODO: remove workaround https://github.com/altmp/altv-issues/issues/737

@@ -4,6 +4,7 @@ import { FingerPoint } from '../handling/fingerPoint';
 import { Action } from '../enums/actions';
 import { Key } from '../enums/keys';
 import { getClosestVehicle } from '../lib/distance';
+import { animationList } from '../enums/animationList';
 
 // https://docs.fivem.net/docs/game-references/controls/
 
@@ -12,7 +13,9 @@ let intervalEngine;
 alt.on('keydown', (key) => {
     if (alt.isMenuOpen() || native.isPauseMenuActive()) {
         if (key === Key.Esc || key === Key.P || key === Key.BACKSPACE) {
-            alt.emit(Action.PlayerClearAnim);
+            if (native.isPedOnFoot(alt.Player.local.scriptID)) {
+                alt.emit(Action.PlayerClearAnim);
+            }
         }
         return;
     }
@@ -52,7 +55,9 @@ alt.on('keydown', (key) => {
             return;
         }
 
-        alt.emit(Action.PlayerWhistle);
+        // Taxi animation
+        alt.emit(Action.PlayerPlayAnim, animationList.taxi);
+        alt.emitServer(Action.PlayerWhistleStart, alt.Player.local.scriptID);
     }
 });
 
@@ -64,9 +69,7 @@ alt.on('keyup', (key) => {
         alt.emit(Action.PlayerPlayOpenMap);
     }
     if (key === Key.E) {
-        if (!getClosestVehicle(alt.Player.local, 10).vehicle?.scriptID) {
-            native.stopAnimPlayback(alt.Player.local.scriptID, 46, true);
-        }
+        alt.emit(Action.PlayerWhistleStop);
     }
     if (key === Key.F && intervalEngine) {
         alt.clearInterval(intervalEngine);
