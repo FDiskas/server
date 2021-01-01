@@ -101,3 +101,17 @@ This folder should be used to copy car mods, mlos, etc. to your resources folder
 Simply add your modded resources, resource dependencies, etc. into this folder.
 
 The build script will handle the rest.
+
+### Ingame keybindings
+
+-   `E` Raises his hand and whistles. If you are close to the vehicle - opens the door. If you are in the vehicle opens a window. If you are near the trunk / hood opens it
+
+-   `F` Sits in the driver's seat. Do not turn off the engine by exiting and holding the `F` key
+
+-   `G` Sits as a passenger in the nearest seat
+
+-   `B` Pointing finger
+
+-   `X` Raises his hands (surrenders)
+
+-   `C` Hold to Crouch
