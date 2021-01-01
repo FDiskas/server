@@ -21,3 +21,18 @@ export function emitInRange(event: string, pos: alt.Vector3, range = 5, exclude 
         alt.emitClient(player, event, ...args);
     }
 }
+export function getClosestVehicle(
+    player: { pos: alt.IVector3 },
+    radius = 50
+): { vehicle: alt.Vehicle; distance: number } {
+    let data = { vehicle: null, distance: radius };
+    alt.Vehicle.all.forEach((vehicle) => {
+        let dis = distance(player.pos, vehicle.pos);
+
+        if (dis < data.distance) {
+            data = { vehicle: vehicle, distance: dis };
+        }
+    });
+
+    return data;
+}

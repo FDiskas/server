@@ -9,6 +9,7 @@ import { Action } from '../client/enums/actions';
 import { PedHash } from '../client/enums/pedHash';
 import { VehicleColor } from '../client/enums/vehicleColor';
 import { VehicleHash } from '../client/enums/vehicleHash';
+import { getClosestVehicle } from './lib/distance';
 
 const spawn = {
     x: -1045.25,
@@ -28,8 +29,12 @@ alt.on('playerConnect', (player: RPPlayer) => {
     player.setWeather(alt.WeatherType.ExtraSunny);
     player.setDateTime(12, 10, 2020, 12, 12, 12);
 
+    let vehicle = (getClosestVehicle({ pos: busPos }, 50).vehicle as unknown) as alt.Vehicle;
+
     // Spawn Bus position
-    const vehicle = new alt.Vehicle(VehicleHash.Coach, busPos.x, busPos.y, busPos.z, 0, 0, -2);
+    if (!vehicle) {
+        vehicle = new alt.Vehicle(VehicleHash.Coach, busPos.x, busPos.y, busPos.z, 0, 0, -2);
+    }
 
     // vehicle.modKit = 1;
     vehicle.dirtLevel = 0;
