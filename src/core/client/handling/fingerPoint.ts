@@ -107,7 +107,7 @@ export class FingerPointClass {
                 this.localPlayer.scriptID,
                 7
             );
-            let [_, blocked, coords1, coords2, entity] = native.getShapeTestResult(ray, false, null, null, null);
+            let [_, blocked] = native.getShapeTestResult(ray, false, null, null, null);
 
             native.setTaskMoveNetworkSignalFloat(this.localPlayer.scriptID, 'Pitch', camPitch);
             native.setTaskMoveNetworkSignalFloat(this.localPlayer.scriptID, 'Heading', camHeading * -1.0 + 1.0);

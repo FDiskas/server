@@ -23,9 +23,10 @@ alt.on('resourceStop', () => {
 // TODO: Upon death - fly camera to the sky - nd keep watching from top
 alt.onServer(Action.PlayerPlayDeathCam, (player) => {
     alt.emit('camera:SetupSky', alt.Player.local.pos);
+    native.playSoundFrontend(-1, 'Timer_10s', 'DLC_HALLOWEEN_FVJ_Sounds', true);
     alt.setTimeout(() => {
         alt.emit('camera:FinishSky');
-    }, 4000);
+    }, 10000);
 });
 
 alt.on('camera:SetupSky', (pos) => {
@@ -52,5 +53,5 @@ alt.on('camera:FinishSky', () => {
             native.renderScriptCams(false, false, 0, false, false, 0);
             native.freezeEntityPosition(alt.Player.local.scriptID, false);
         }, 60000);
-    }, 4000);
+    }, 10000);
 });
