@@ -21,7 +21,7 @@
         "rootDir": "./src",
         "downlevelIteration": true,
         "preserveConstEnums": false,
-        "target": "ESNext"
+        "target": "ESNext",
     },
     "include": [
         "./src/**/*.ts",

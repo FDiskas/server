@@ -1,4 +1,5 @@
 export const enum Action {
+    PlayerConnected = 'Player:connected',
     PlayerReady = 'Player:Ready',
     PlayerGetDrunk = 'Player:Drunk',
     TakeBusFromAirport = 'Bus:From:Airport',

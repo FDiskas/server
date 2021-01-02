@@ -11,3 +11,4 @@ data/
 /cache
 /crashdumps
 src/hud/client/html
+.idea
