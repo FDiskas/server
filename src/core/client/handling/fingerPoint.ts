@@ -107,6 +107,7 @@ export class FingerPointClass {
                 this.localPlayer.scriptID,
                 7
             );
+            // @ts-ignore
             let [_, blocked] = native.getShapeTestResult(ray, false, null, null, null);
 
             native.setTaskMoveNetworkSignalFloat(this.localPlayer.scriptID, 'Pitch', camPitch);

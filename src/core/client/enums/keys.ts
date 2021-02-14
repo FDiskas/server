@@ -13,6 +13,9 @@ export const enum Key {
     DOWN = 40,
     F = 70,
     G = 71,
+    SHIFT = 16,
+    A = 65,
+    D = 68,
 }
 
 export const enum NativeKey {

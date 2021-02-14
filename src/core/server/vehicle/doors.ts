@@ -21,8 +21,8 @@ alt.onClient(Action.PlayerToggleCarDoor, (player: alt.Player, veh: alt.Vehicle['
         1: 2,
         2: 3,
         3: 4,
-        4: 4,
-        5: 5,
+        4: 5,
+        5: 6,
     };
     const vehicle = alt.Vehicle.getByID(veh);
     const doorState = vehicle.getDoorState(doorIndex[index]);

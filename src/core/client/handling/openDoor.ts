@@ -1,5 +1,5 @@
-import * as alt from 'alt-client';
-import * as native from 'natives';
+// import * as alt from 'alt-client';
+// import * as native from 'natives';
 
 // ap1_02_door_r001
 

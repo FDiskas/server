@@ -103,4 +103,10 @@ export const animationList = {
         flag: 49,
         duration: -1,
     },
+    push: {
+        dict: 'missfinale_c2ig_11',
+        name: alt.Player.local.model === 0x705e61f2 ? 'pushcar_offcliff_m' : 'pushcar_offcliff_f',
+        flag: 35,
+        duration: -1,
+    },
 };

@@ -14,7 +14,7 @@
 
 ⭐ This repository if you found it useful!
 
-### Excerpt
+### Development
 
 alt:V has a lot of Boilerplates for TypeScript. However, they have one feature missing. They fail to create an environment where you can support multiple resource compilations. This boilerplate aims to fix that and allow multiple resources to be compiled at once and all your mods.
 
@@ -31,6 +31,12 @@ alt:V has a lot of Boilerplates for TypeScript. However, they have one feature m
 ### Installation
 
 [Get NodeJS 13+](https://nodejs.org/en/download/current/)
+
+Login to github packages. For password use your github access token or create new one with read packages permission
+
+```
+npm login --scope=@durtyfree --registry=https://npm.pkg.github.com
+```
 
 Install the node modules
 

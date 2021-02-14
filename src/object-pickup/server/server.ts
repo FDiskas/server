@@ -134,7 +134,7 @@ alt.on('playerConnect', Pickups.handlePlayerConnect);
 alt.on('pickups:create', Pickups.create);
 alt.on('pickups:remove', Pickups.remove);
 alt.on('pickups:setStreamRange', (range: string) => {
-    STREAM_RANGE = range;
+    // STREAM_RANGE = range;
 });
 
 alt.onClient('create', (player, coords) => {

@@ -19,6 +19,10 @@ alt.on('keydown', (key) => {
         }
         return;
     }
+    if (key === Key.SHIFT) {
+        alt.emit('push');
+
+    }
     if (key === Key.F) {
         //429 - _PED_FLAG_DISABLE_STARTING_VEH_ENGINE
         native.setPedConfigFlag(alt.Player.local.scriptID, 429, true);

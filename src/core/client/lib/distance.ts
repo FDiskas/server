@@ -14,7 +14,7 @@ export function distance(vector1: alt.IVector3, vector2: alt.IVector3) {
  * Get the closest vehicle to a player.
  */
 export function getClosestVehicle(
-    player: { pos: alt.IVector3 },
+    player: { pos: alt.IVector3 | alt.Vector3 },
     radius = 50
 ): { vehicle: alt.Vehicle; distance: number } {
     let data = { vehicle: null, distance: radius };

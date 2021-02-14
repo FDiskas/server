@@ -6,7 +6,7 @@ let view = null;
 let view2 = null;
 let gameObject = null;
 alt.on('youtube', () => {
-    let pos = alt.Player.local.pos;
+    // let pos = alt.Player.local.pos;
     // gameObject = native.createObject(
     //     native.getHashKey('gr_prop_gr_trailer_tv'),
     //     pos.x,

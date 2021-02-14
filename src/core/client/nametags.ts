@@ -1,6 +1,5 @@
 import * as alt from 'alt-client';
 import native from 'natives';
-import { MarkerTypes } from '../../admin/client/enums/markerType';
 import { Font } from './enums/font';
 import { distance } from './lib/distance';
 

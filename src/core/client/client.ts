@@ -13,7 +13,7 @@ import './AI/takeFromAirport';
 // import './AI/medics';
 import './vehicle/doors';
 import './vehicle/enter';
-// import './vehicle/push';
+import './vehicle/push2';
 import './core/notifications';
 import './handling/openDoor';
 import './weather/weather';
@@ -158,8 +158,8 @@ alt.on('consoleCommand', async (cmd, ...args) => {
                 true,
                 1,
                 false,
-                0,
-                0,
+                null,
+                null,
                 false
             );
         });

@@ -39,7 +39,7 @@ alt.everyTick(() => {
     let vehicle = alt.Player.local.vehicle;
     if (vehicle) {
         let lightState = 0;
-        let [dayLights, nightLights, longLights] = native.getVehicleLightsState(vehicle.scriptID, true, false);
+        let [, nightLights, longLights] = native.getVehicleLightsState(vehicle.scriptID, true, false);
         if (nightLights) lightState = 1;
         if (longLights) lightState = 2;
         mainHud.emit('speedometer:data', {
