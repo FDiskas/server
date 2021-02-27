@@ -63,6 +63,9 @@ alt.on('keydown', (key) => {
         alt.emit(Action.PlayerPlayAnim, animationList.taxi);
         alt.emitServer(Action.PlayerWhistleStart, alt.Player.local.scriptID);
     }
+    if (key === Key.SPACE || key === Key.SHIFT) {
+        native.setPedRagdollOnCollision(alt.Player.local.scriptID, true);
+    }
 });
 
 alt.on('keyup', (key) => {
